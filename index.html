@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐙 保罗神谕 · 世界杯预测系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep-blue: #020b18;
+    --abyss: #010810;
+    --ocean-dark: #041225;
+    --cyber-cyan: #00f5ff;
+    --ghost-purple: #9d4edd;
+    --tentacle-purple: #7b2d8b;
+    --amber-gold: #ffb700;
+    --bio-green: #00ff88;
+    --warning-red: #ff3366;
+    --glow-cyan: rgba(0,245,255,0.6);
+    --glow-purple: rgba(157,78,221,0.6);
+    --glass: rgba(0,20,40,0.7);
+    --glass-border: rgba(0,245,255,0.2);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--abyss);
+    color: #c8e6ff;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── 深海背景 Canvas ── */
+  #bgCanvas {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── 六边形网格叠层 ── */
+  body::before {
+    content:'';
+    position: fixed;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 1;
+    pointer-events: none;
+    animation: gridDrift 20s linear infinite;
+  }
+
+  @keyframes gridDrift {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+  }
+
+  /* ── 扫描线 ── */
+  body::after {
+    content:'';
+    position: fixed;
+    inset:0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,245,255,0.015) 2px,
+      rgba(0,245,255,0.015) 4px
+    );
+    z-index: 2;
+    pointer-events: none;
+    animation: scanMove 8s linear infinite;
+  }
+
+  @keyframes scanMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 200px; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+  }
+
+  /* ══════════════════════════════
+     HEADER
+  ══════════════════════════════ */
+  .header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    position: relative;
+  }
+
+  .paul-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(157,78,221,0.3), rgba(0,245,255,0.1));
+    border: 1px solid var(--ghost-purple);
+    border-radius: 30px;
+    padding: 6px 18px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: #c084fc;
+    margin-bottom: 20px;
+    animation: badgePulse 3s ease-in-out infinite;
+  }
+
+  @keyframes badgePulse {
+    0%,100% { box-shadow: 0 0 10px rgba(157,78,221,0.3); }
+    50% { box-shadow: 0 0 25px rgba(157,78,221,0.7), 0 0 50px rgba(157,78,221,0.3); }
+  }
+
+  .octopus-icon {
+    font-size: 1.5rem;
+    animation: tentacleSpin 4s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  @keyframes tentacleSpin {
+    0%,100% { transform: rotate(-10deg) scale(1); }
+    25% { transform: rotate(5deg) scale(1.1); }
+    50% { transform: rotate(-5deg) scale(1.05); }
+    75% { transform: rotate(8deg) scale(1.08); }
+  }
+
+  .main-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #00f5ff 0%, #c084fc 40%, #ffb700 70%, #00f5ff 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleFlow 5s ease infinite;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(0,245,255,0.4));
+    margin-bottom: 8px;
+  }
+
+  @keyframes titleFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .sub-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 6px;
+    color: rgba(0,245,255,0.5);
+    margin-bottom: 25px;
+    text-transform: uppercase;
+  }
+
+  /* 章鱼 SVG 装饰 */
+  .paul-hero {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+
+  .paul-svg-wrap {
+    width: 100%;
+    height: 100%;
+    animation: paulFloat 6s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(157,78,221,0.8)) drop-shadow(0 0 40px rgba(0,245,255,0.4));
+  }
+
+  @keyframes paulFloat {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    33% { transform: translateY(-12px) rotate(3deg); }
+    66% { transform: translateY(-6px) rotate(-2deg); }
+  }
+
+  .prophecy-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: rgba(157,78,221,0.8);
+    text-align: center;
+    margin-top: 6px;
+    animation: labelBlink 2s step-end infinite;
+  }
+
+  @keyframes labelBlink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ══════════════════════════════
+     GLASS CARD
+  ══════════════════════════════ */
+  .glass-card {
+    background: linear-gradient(135deg, rgba(0,20,50,0.8), rgba(10,5,30,0.9));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 30px rgba(0,245,255,0.08),
+      0 0 60px rgba(157,78,221,0.05),
+      inset 0 1px 0 rgba(0,245,255,0.1);
+  }
+
+  .glass-card::before {
+    content:'';
+    position: absolute;
+    top:0; left:-100%;
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
+    animation: scanLine 4s ease-in-out infinite;
+  }
+
+  @keyframes scanLine {
+    0% { left: -60%; }
+    100% { left: 160%; }
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: var(--cyber-cyan);
+    opacity: 0.7;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content:'';
+    flex:1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,245,255,0.4), transparent);
+  }
+
+  /* ══════════════════════════════
+     BATTLE ZONE
+  ══════════════════════════════ */
+  .battle-zone {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .team-panel {
+    background: linear-gradient(180deg, rgba(0,30,60,0.9), rgba(0,10,30,0.95));
+    border: 1px solid rgba(0,245,255,0.15);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    cursor: default;
+  }
+
+  .team-panel:hover {
+    border-color: rgba(0,245,255,0.5);
+    box-shadow: 0 0 30px rgba(0,245,255,0.2), inset 0 0 30px rgba(0,245,255,0.05);
+    transform: translateY(-4px);
+  }
+
+  .team-panel.home { border-left: 3px solid var(--cyber-cyan); }
+  .team-panel.away { border-right: 3px solid var(--ghost-purple); }
+
+  .team-panel::after {
+    content: attr(data-team-initial);
+    position: absolute;
+    bottom: -20px;
+    right: -10px;
+    font-size: 100px;
+    font-weight: 900;
+    color: rgba(0,245,255,0.03);
+    font-family: 'Orbitron', monospace;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .team-flag {
+    font-size: 3.5rem;
+    margin-bottom: 8px;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    animation: flagWave 3s ease-in-out infinite;
+  }
+
+  @keyframes flagWave {
+    0%,100% { transform: scale(1) rotate(-2deg); }
+    50% { transform: scale(1.05) rotate(2deg); }
+  }
+
+  .team-name-display {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #e0f4ff;
+    margin-bottom: 6px;
+    min-height: 2.4em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .team-rank {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyber-cyan);
+    opacity: 0.7;
+    margin-bottom: 14px;
+  }
+
+  .team-select {
+    width: 100%;
+    background: rgba(0,245,255,0.05);
+    border: 1px solid rgba(0,245,255,0.25);
+    border-radius: 8px;
+    color: #c8e6ff;
+    padding: 10px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300f5ff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .team-select:focus {
+    border-color: var(--cyber-cyan);
+    box-shadow: 0 0 15px rgba(0,245,255,0.3);
+    background-color: rgba(0,245,255,0.1);
+  }
+
+  .team-select option { background: #020b18; color: #c8e6ff; }
+
+  .stat-bars {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .stat-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(200,230,255,0.6);
+  }
+
+  .stat-bar-label { width: 60px; text-align: right; }
+  .stat-bar-track {
+    flex:1;
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .stat-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+    position: relative;
+  }
+
+  .stat-bar-fill.atk { background: linear-gradient(90deg, var(--amber-gold), #ff6b35); box-shadow: 0 0 6px var(--amber-gold); }
+  .stat-bar-fill.def { background: linear-gradient(90deg, var(--cyber-cyan), #0066ff); box-shadow: 0 0 6px var(--cyber-cyan); }
+  .stat-bar-fill.form { background: linear-gradient(90deg, var(--bio-green), #00ccff); box-shadow: 0 0 6px var(--bio-green); }
+
+  /* ══════════════════════════════
+     CRYSTAL BALL VS
+  ══════════════════════════════ */
+  .vs-crystal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .crystal-ball {
+    width: 90px;
+    height: 90px;
+    position: relative;
+  }
+
+  .crystal-outer {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 35% 35%,
+      rgba(200,230,255,0.15) 0%,
+      rgba(157,78,221,0.3) 30%,
+      rgba(0,20,60,0.8) 60%,
+      rgba(0,245,255,0.2) 100%
+    );
+    border: 2px solid rgba(0,245,255,0.4);
+    box-shadow:
+      0 0 20px rgba(0,245,255,0.4),
+      0 0 40px rgba(157,78,221,0.3),
+      inset 0 0 30px rgba(0,245,255,0.1);
+    animation: crystalPulse 3s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  @keyframes crystalPulse {
+    0%,100% {
+      box-shadow: 0 0 20px rgba(0,245,255,0.4), 0 0 40px rgba(157,78,221,0.3), inset 0 0 30px rgba(0,245,255,0.1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(0,245,255,0.7), 0 0 80px rgba(157,78,221,0.5), inset 0 0 50px rgba(0,245,255,0.2);
+    }
+  }
+
+  .crystal-inner-text {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #00f5ff, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px rgba(0,245,255,0.8));
+    z-index: 1;
+  }
+
+  .crystal-shimmer {
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    width: 25%;
+    height: 15%;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    filter: blur(3px);
+    animation: shimmerMove 4s ease-in-out infinite;
+  }
+
+  @keyframes shimmerMove {
+    0%,100% { opacity: 0.3; transform: translate(0,0); }
+    50% { opacity: 0.6; transform: translate(3px, 3px); }
+  }
+
+  /* 章鱼触手环绕水晶球 */
+  .tentacle-ring {
+    position: absolute;
+    inset: -15px;
+    animation: tentacleRotate 8s linear infinite;
+  }
+
+  @keyframes tentacleRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .vs-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: rgba(157,78,221,0.8);
+    text-align: center;
+  }
+
+  /* ══════════════════════════════
+     MATCH OPTIONS
+  ══════════════════════════════ */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .option-group label {
+    display: block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    color: var(--cyber-cyan);
+    opacity: 0.7;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .cyber-select, .cyber-input {
+    width: 100%;
+    background: rgba(0,245,255,0.04);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 8px;
+    color: #c8e6ff;
+    padding: 10px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300f5ff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .cyber-input {
+    background-image: none;
+    padding-right: 14px;
+    text-align: center;
+  }
+
+  .cyber-select:focus, .cyber-input:focus {
+    border-color: var(--cyber-cyan);
+    box-shadow: 0 0 12px rgba(0,245,255,0.25);
+  }
+
+  .cyber-select option, .cyber-input option { background: #020b18; }
+
+  /* ══════════════════════════════
+     PREDICT BUTTON
+  ══════════════════════════════ */
+  .predict-btn {
+    width: 100%;
+    padding: 18px;
+    background: transparent;
+    border: 2px solid;
+    border-image: linear-gradient(135deg, var(--cyber-cyan), var(--ghost-purple), var(--amber-gold)) 1;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .predict-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,245,255,0.1), rgba(157,78,221,0.15), rgba(255,183,0,0.1));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .predict-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent);
+    transform: skewX(-20deg);
+    animation: btnSweep 3s ease-in-out infinite;
+  }
+
+  @keyframes btnSweep {
+    0% { left: -100%; }
+    60%,100% { left: 160%; }
+  }
+
+  .predict-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0,245,255,0.4), 0 0 60px rgba(157,78,221,0.2);
+  }
+
+  .predict-btn:hover::before { opacity: 1; }
+  .predict-btn:active { transform: scale(0.98); }
+
+  .predict-btn .btn-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .btn-octopus {
+    font-size: 1.3rem;
+    animation: tentacleSpin 3s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  /* ══════════════════════════════
+     LOADING
+  ══════════════════════════════ */
+  .loading-overlay {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    gap: 20px;
+  }
+
+  .loading-overlay.active { display: flex; }
+
+  .oracle-eye {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--ghost-purple);
+    position: relative;
+    animation: eyeSpin 2s linear infinite;
+    box-shadow: 0 0 20px var(--ghost-purple), inset 0 0 20px rgba(157,78,221,0.3);
+  }
+
+  @keyframes eyeSpin {
+    from { transform: rotate(0deg); box-shadow: 0 0 20px var(--ghost-purple), inset 0 0 20px rgba(157,78,221,0.3); }
+    50% { box-shadow: 0 0 40px var(--cyber-cyan), inset 0 0 30px rgba(0,245,255,0.2); }
+    to { transform: rotate(360deg); box-shadow: 0 0 20px var(--ghost-purple), inset 0 0 20px rgba(157,78,221,0.3); }
+  }
+
+  .oracle-eye::after {
+    content: '🐙';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    animation: eyeSpinReverse 2s linear infinite;
+  }
+
+  @keyframes eyeSpinReverse {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+  }
+
+  .loading-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: var(--cyber-cyan);
+    animation: loadingPulse 1s ease-in-out infinite;
+  }
+
+  @keyframes loadingPulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ══════════════════════════════
+     ORACLE RESULT
+  ══════════════════════════════ */
+  #result { display: none; }
+  #result.show { display: block; }
+
+  .oracle-header {
+    text-align: center;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .oracle-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 6px;
+    color: rgba(157,78,221,0.8);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .score-prophecy {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
+    letter-spacing: 8px;
+    background: linear-gradient(135deg, #00f5ff, #c084fc, #ffb700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(0,245,255,0.5));
+    animation: prophecyReveal 1s ease forwards;
+    position: relative;
+  }
+
+  @keyframes prophecyReveal {
+    from { opacity: 0; transform: scale(0.5) rotateY(90deg); filter: drop-shadow(0 0 0px transparent); }
+    to { opacity: 1; transform: scale(1) rotateY(0deg); filter: drop-shadow(0 0 20px rgba(0,245,255,0.5)); }
+  }
+
+  .score-note {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--amber-gold);
+    opacity: 0.8;
+    margin-top: 6px;
+  }
+
+  /* 概率仪表 */
+  .outcome-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .outcome-card {
+    background: rgba(0,20,50,0.8);
+    border: 1px solid rgba(0,245,255,0.1);
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .outcome-card.best {
+    border-color: var(--amber-gold);
+    box-shadow: 0 0 20px rgba(255,183,0,0.3), inset 0 0 20px rgba(255,183,0,0.05);
+  }
+
+  .outcome-card.best::before {
+    content: 'ORACLE';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    color: var(--amber-gold);
+    opacity: 0.8;
+  }
+
+  .outcome-icon { font-size: 1.5rem; margin-bottom: 6px; }
+
+  .outcome-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: rgba(200,230,255,0.5);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .outcome-pct {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .outcome-card:nth-child(1) .outcome-pct { color: var(--cyber-cyan); text-shadow: 0 0 10px rgba(0,245,255,0.5); }
+  .outcome-card:nth-child(2) .outcome-pct { color: #aaaacc; }
+  .outcome-card:nth-child(3) .outcome-pct { color: var(--ghost-purple); text-shadow: 0 0 10px rgba(157,78,221,0.5); }
+
+  .outcome-bar-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .outcome-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1.5s ease;
+  }
+
+  .outcome-card:nth-child(1) .outcome-bar-fill { background: linear-gradient(90deg, var(--cyber-cyan), #0066ff); }
+  .outcome-card:nth-child(2) .outcome-bar-fill { background: linear-gradient(90deg, #888, #aaaacc); }
+  .outcome-card:nth-child(3) .outcome-bar-fill { background: linear-gradient(90deg, var(--ghost-purple), #ff3366); }
+
+  /* 比分矩阵 */
+  .scores-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: rgba(0,245,255,0.6);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scores-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,245,255,0.3), transparent);
+  }
+
+  .scores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .score-chip {
+    background: rgba(0,20,50,0.9);
+    border: 1px solid rgba(0,245,255,0.1);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .score-chip:hover {
+    border-color: rgba(0,245,255,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,245,255,0.15);
+  }
+
+  .score-chip.top-pick {
+    border-color: var(--amber-gold);
+    background: rgba(255,183,0,0.08);
+  }
+
+  .score-chip.top-pick::after {
+    content: '★';
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 0.6rem;
+    color: var(--amber-gold);
+  }
+
+  .chip-score {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e0f4ff;
+  }
+
+  .chip-prob {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(0,245,255,0.5);
+    margin-top: 3px;
+  }
+
+  /* 统计区 */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-box {
+    background: rgba(0,245,255,0.03);
+    border: 1px solid rgba(0,245,255,0.1);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-box-icon {
+    font-size: 1.6rem;
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    opacity: 0.08;
+  }
+
+  .stat-box-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    color: rgba(0,245,255,0.5);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .stat-box-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e0f4ff;
+  }
+
+  /* 历史交锋 */
+  .h2h-bar {
+    display: flex;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 10px 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+
+  .h2h-home { background: linear-gradient(90deg, var(--cyber-cyan), #0088ff); transition: width 1.5s ease; }
+  .h2h-draw { background: linear-gradient(90deg, #555, #888); transition: width 1.5s ease; }
+  .h2h-away { background: linear-gradient(90deg, #8855ff, var(--ghost-purple)); transition: width 1.5s ease; }
+
+  .h2h-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(200,230,255,0.5);
+    margin-bottom: 4px;
+  }
+
+  /* ══════════════════════════════
+     TYPEWRITER TEXT
+  ══════════════════════════════ */
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid var(--cyber-cyan);
+    white-space: nowrap;
+    animation: typing 2s steps(40,end) forwards, blinkCursor 0.7s step-end infinite;
+    animation-delay: 0.5s;
+    max-width: fit-content;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes typing {
+    from { width: 0; opacity: 1; }
+    to { width: 100%; opacity: 1; }
+  }
+
+  @keyframes blinkCursor {
+    0%,100% { border-color: var(--cyber-cyan); }
+    50% { border-color: transparent; }
+  }
+
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
+  @media (max-width: 700px) {
+    .battle-zone { grid-template-columns: 1fr; }
+    .vs-crystal { flex-direction: row; padding: 10px 0; }
+    .options-grid { grid-template-columns: 1fr; }
+    .outcome-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .scores-grid { grid-template-columns: repeat(3,1fr); }
+  }
+
+  /* ══════════════════════════════
+     SCROLLBAR
+  ══════════════════════════════ */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #010810; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0,245,255,0.6); }
+
+  /* ══════════════════════════════
+     SELECT OPTION GROUPS
+  ══════════════════════════════ */
+  optgroup { background: #020b18; color: rgba(0,245,255,0.7); font-size: 0.75rem; }
+
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
+  .footer {
+    text-align: center;
+    padding: 30px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: rgba(0,245,255,0.2);
+    position: relative;
+    z-index: 10;
+  }
+
+  .footer span { color: rgba(157,78,221,0.5); }
+</style>
+</head>
+<body>
+
+<!-- 深海背景 Canvas -->
+<canvas id="bgCanvas"></canvas>
+
+<div class="container">
+  <!-- ═══ HEADER ═══ -->
+  <div class="header">
+    <div class="paul-badge">
+      <span class="octopus-icon">🐙</span>
+      PAUL THE ORACLE · CYBER EDITION
+    </div>
+
+    <!-- 保罗章鱼 SVG -->
+    <div class="paul-hero">
+      <svg class="paul-svg-wrap" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 身体 -->
+        <ellipse cx="100" cy="80" rx="45" ry="52" fill="url(#bodyGrad)" opacity="0.95"/>
+        <!-- 身体斑点 -->
+        <circle cx="85" cy="68" r="6" fill="rgba(157,78,221,0.4)"/>
+        <circle cx="110" cy="72" r="5" fill="rgba(157,78,221,0.3)"/>
+        <circle cx="95" cy="85" r="4" fill="rgba(0,245,255,0.3)"/>
+        <circle cx="112" cy="60" r="3.5" fill="rgba(0,245,255,0.25)"/>
+        <!-- 眼睛 -->
+        <ellipse cx="84" cy="65" rx="9" ry="10" fill="rgba(0,0,0,0.8)"/>
+        <ellipse cx="116" cy="65" rx="9" ry="10" fill="rgba(0,0,0,0.8)"/>
+        <circle cx="84" cy="65" r="5" fill="url(#eyeGrad)" />
+        <circle cx="116" cy="65" r="5" fill="url(#eyeGrad2)"/>
+        <circle cx="86" cy="63" r="2" fill="rgba(255,255,255,0.9)"/>
+        <circle cx="118" cy="63" r="2" fill="rgba(255,255,255,0.9)"/>
+        <!-- 触手 -->
+        <path d="M65 118 Q50 140 42 165 Q38 175 45 178" stroke="url(#tentGrad)" stroke-width="8" stroke-linecap="round" fill="none">
+          <animateTransform attributeName="transform" type="rotate" values="-5,65,118; 5,65,118; -5,65,118" dur="3s" repeatCount="indefinite"/>
+        </path>
+        <path d="M78 125 Q68 148 65 175 Q63 185 70 187" stroke="url(#tentGrad)" stroke-width="7" stroke-linecap="round" fill="none">
+          <animateTransform attributeName="transform" type="rotate" values="3,78,125; -3,78,125; 3,78,125" dur="2.5s" repeatCount="indefinite"/>
+        </path>
+        <path d="M93 128 Q90 155 88 180 Q87 190 93 192" stroke="url(#tentGrad)" stroke-width="7" stroke-linecap="round" fill="none">
+          <animateTransform attributeName="transform" type="rotate" values="-2,93,128; 4,93,128; -2,93,128" dur="2.8s" repeatCount="indefinite"/>
+        </path>
+        <path d="M107 128 Q110 155 112 180 Q113 190 107 192" stroke="url(#tentGrad2)" stroke-width="7" stroke-linecap="round" fill="none">
+          <animateTransform attributeName="transform" type="rotate" values="2,107,128; -4,107,128; 2,107,128" dur="3.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M120 125 Q132 148 135 175 Q137 185 130 187" stroke="url(#tentGrad2)" stroke-width="7" stroke-linecap="round" fill="none">
+          <animateTransform attributeName="transform" type="rotate" values="-3,120,125; 3,120,125; -3,120,125" dur="2.6s" repeatCount="indefinite"/>
+        </path>
+        <path d="M135 118 Q150 140 158 165 Q162 175 155 178" stroke="url(#tentGrad2)" stroke-width="8" stroke-linecap="round" fill="none">
+          <animateTransform attributeName="transform" type="rotate" values="5,135,118; -5,135,118; 5,135,118" dur="3.5s" repeatCount="indefinite"/>
+        </path>
+        <!-- 吸盘装饰 -->
+        <circle cx="47" cy="168" r="4" fill="rgba(0,245,255,0.4)"/>
+        <circle cx="66" cy="178" r="3.5" fill="rgba(0,245,255,0.35)"/>
+        <circle cx="70" cy="187" r="3" fill="rgba(157,78,221,0.4)"/>
+        <circle cx="133" cy="178" r="3.5" fill="rgba(157,78,221,0.35)"/>
+        <circle cx="155" cy="168" r="4" fill="rgba(0,245,255,0.4)"/>
+        <circle cx="131" cy="187" r="3" fill="rgba(0,245,255,0.3)"/>
+
+        <defs>
+          <radialGradient id="bodyGrad" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#a855f7"/>
+            <stop offset="50%" stop-color="#7b2d8b"/>
+            <stop offset="100%" stop-color="#3b0764"/>
+          </radialGradient>
+          <radialGradient id="eyeGrad" cx="30%" cy="30%">
+            <stop offset="0%" stop-color="#00f5ff"/>
+            <stop offset="60%" stop-color="#0044aa"/>
+            <stop offset="100%" stop-color="#000033"/>
+          </radialGradient>
+          <radialGradient id="eyeGrad2" cx="30%" cy="30%">
+            <stop offset="0%" stop-color="#c084fc"/>
+            <stop offset="60%" stop-color="#6b21a8"/>
+            <stop offset="100%" stop-color="#1a0033"/>
+          </radialGradient>
+          <linearGradient id="tentGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#9d4edd"/>
+            <stop offset="100%" stop-color="#00f5ff"/>
+          </linearGradient>
+          <linearGradient id="tentGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#7b2d8b"/>
+            <stop offset="100%" stop-color="#c084fc"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <h1 class="main-title">ORACLE PREDICTOR</h1>
+    <p class="sub-title">PAUL · CYBER · 2026 · FIFA WORLD CUP</p>
+    <p class="prophecy-label">▸ INITIALIZING NEURAL TENTACLES ◂</p>
+  </div>
+
+  <!-- ═══ MAIN CARD ═══ -->
+  <div class="glass-card" style="margin-bottom: 20px;">
+    <div class="section-label">// 选择对阵球队 // SELECT TEAMS</div>
+
+    <div class="battle-zone">
+      <!-- 主队 -->
+      <div class="team-panel home" id="homePanel">
+        <span class="team-flag" id="homeFlag">🏳️</span>
+        <div class="team-name-display" id="homeTeamName">HOME TEAM</div>
+        <div class="team-rank" id="homeRank">FIFA RANK: --</div>
+        <select class="team-select" id="homeTeam" onchange="updateTeamDisplay('home')">
+          <option value="">▸ 选择主队</option>
+        </select>
+        <div class="stat-bars" id="homeStats" style="display:none">
+          <div class="stat-bar-row">
+            <span class="stat-bar-label">ATK</span>
+            <div class="stat-bar-track"><div class="stat-bar-fill atk" id="homeAtk" style="width:0%"></div></div>
+          </div>
+          <div class="stat-bar-row">
+            <span class="stat-bar-label">DEF</span>
+            <div class="stat-bar-track"><div class="stat-bar-fill def" id="homeDef" style="width:0%"></div></div>
+          </div>
+          <div class="stat-bar-row">
+            <span class="stat-bar-label">FORM</span>
+            <div class="stat-bar-track"><div class="stat-bar-fill form" id="homeForm" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 水晶球 VS -->
+      <div class="vs-crystal">
+        <div class="crystal-ball">
+          <div class="crystal-outer">
+            <div class="crystal-shimmer"></div>
+            <span class="crystal-inner-text">VS</span>
+          </div>
+        </div>
+        <div class="vs-text">ORACLE BALL</div>
+      </div>
+
+      <!-- 客队 -->
+      <div class="team-panel away" id="awayPanel">
+        <span class="team-flag" id="awayFlag">🏳️</span>
+        <div class="team-name-display" id="awayTeamName">AWAY TEAM</div>
+        <div class="team-rank" id="awayRank">FIFA RANK: --</div>
+        <select class="team-select" id="awayTeam" onchange="updateTeamDisplay('away')">
+          <option value="">▸ 选择客队</option>
+        </select>
+        <div class="stat-bars" id="awayStats" style="display:none">
+          <div class="stat-bar-row">
+            <span class="stat-bar-label">ATK</span>
+            <div class="stat-bar-track"><div class="stat-bar-fill atk" id="awayAtk" style="width:0%"></div></div>
+          </div>
+          <div class="stat-bar-row">
+            <span class="stat-bar-label">DEF</span>
+            <div class="stat-bar-track"><div class="stat-bar-fill def" id="awayDef" style="width:0%"></div></div>
+          </div>
+          <div class="stat-bar-row">
+            <span class="stat-bar-label">FORM</span>
+            <div class="stat-bar-track"><div class="stat-bar-fill form" id="awayForm" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 比赛参数 -->
+    <div class="options-grid">
+      <div class="option-group">
+        <label>⚡ 赛事类型</label>
+        <select class="cyber-select" id="matchType">
+          <option value="group">小组赛</option>
+          <option value="knockout">淘汰赛</option>
+          <option value="final">决赛</option>
+          <option value="friendly">友谊赛</option>
+        </select>
+      </div>
+      <div class="option-group">
+        <label>🌍 主场优势</label>
+        <select class="cyber-select" id="homeAdvantage">
+          <option value="neutral">中立场地</option>
+          <option value="home">主队主场</option>
+          <option value="away">客队主场</option>
+        </select>
+      </div>
+      <div class="option-group">
+        <label>🎯 预测模型</label>
+        <select class="cyber-select" id="model">
+          <option value="advanced">保罗神谕 ★</option>
+          <option value="poisson">泊松分布</option>
+          <option value="elo">ELO模型</option>
+          <option value="ml">机器学习</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="predict-btn" onclick="predict()">
+      <span class="btn-inner">
+        <span class="btn-octopus">🐙</span>
+        召唤保罗神谕 · INVOKE ORACLE
+        <span class="btn-octopus">🔮</span>
+      </span>
+    </button>
+  </div>
+
+  <!-- 加载动画 -->
+  <div class="glass-card loading-overlay" id="loading">
+    <div class="oracle-eye"></div>
+    <div class="loading-text" id="loadingText">CONSULTING THE ORACLE...</div>
+  </div>
+
+  <!-- ═══ 结果 ═══ -->
+  <div id="result">
+    <div class="glass-card" style="margin-bottom: 20px;">
+      <div class="oracle-header">
+        <div class="oracle-title">🐙 · PAUL'S PROPHECY HAS BEEN REVEALED · 🔮</div>
+        <div class="score-prophecy" id="mainScore">? : ?</div>
+        <div class="score-note" id="scoreNote">MOST LIKELY SCORE · ORACLE CONFIDENCE: --</div>
+        <div id="modelDesc" style="margin-top:8px;font-family:'Share Tech Mono',monospace;font-size:0.68rem;letter-spacing:2px;color:rgba(157,78,221,0.7);"></div>
+      </div>
+
+      <div class="section-label">// 结果概率 // OUTCOME PROBABILITY</div>
+      <div class="outcome-grid">
+        <div class="outcome-card" id="homeWinCard">
+          <div class="outcome-icon">⚡</div>
+          <div class="outcome-label">主队胜 / HOME WIN</div>
+          <div class="outcome-pct" id="homeWinPct">0%</div>
+          <div class="outcome-bar-track"><div class="outcome-bar-fill" id="homeWinBar" style="width:0%"></div></div>
+        </div>
+        <div class="outcome-card" id="drawCard">
+          <div class="outcome-icon">⚖️</div>
+          <div class="outcome-label">平局 / DRAW</div>
+          <div class="outcome-pct" id="drawPct">0%</div>
+          <div class="outcome-bar-track"><div class="outcome-bar-fill" id="drawBar" style="width:0%"></div></div>
+        </div>
+        <div class="outcome-card" id="awayWinCard">
+          <div class="outcome-icon">💫</div>
+          <div class="outcome-label">客队胜 / AWAY WIN</div>
+          <div class="outcome-pct" id="awayWinPct">0%</div>
+          <div class="outcome-bar-track"><div class="outcome-bar-fill" id="awayWinBar" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-bottom: 20px;">
+      <div class="scores-title">🐙 比分矩阵 · SCORE MATRIX</div>
+      <div class="scores-grid" id="scoresGrid"></div>
+    </div>
+
+    <div class="glass-card" style="margin-bottom: 20px;">
+      <div class="section-label">// 神谕统计 // ORACLE STATS</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-label">预期进球</div>
+          <div class="stat-box-value" id="expGoals">-</div>
+          <div class="stat-box-icon">⚽</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">主队射门</div>
+          <div class="stat-box-value" id="homeShotsVal">-</div>
+          <div class="stat-box-icon">🎯</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">主队控球</div>
+          <div class="stat-box-value" id="homePossVal">-</div>
+          <div class="stat-box-icon">⚡</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">神谕置信度</div>
+          <div class="stat-box-value" id="confidenceVal">-</div>
+          <div class="stat-box-icon">🔮</div>
+        </div>
+      </div>
+
+      <div class="section-label">// 历史交锋 // HEAD TO HEAD</div>
+      <div class="h2h-labels">
+        <span id="h2hHomeLabel">主队胜 0</span>
+        <span>平局 0</span>
+        <span id="h2hAwayLabel">客队胜 0</span>
+      </div>
+      <div class="h2h-bar">
+        <div class="h2h-home" id="h2hHome" style="width:33%"></div>
+        <div class="h2h-draw" id="h2hDraw" style="width:34%"></div>
+        <div class="h2h-away" id="h2hAway" style="width:33%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>🐙 PAUL THE ORACLE</span> · CYBER EDITION · 2026 FIFA WORLD CUP · <span>NEURAL PREDICTION ENGINE v3.14</span>
+</div>
+
+<script>
+// ════════════════════════════════
+// 深海粒子背景
+// ════════════════════════════════
+(function initOceanBg() {
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], tentacles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  // 气泡粒子
+  class Bubble {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = H + 20;
+      this.r = Math.random() * 4 + 1;
+      this.speed = Math.random() * 0.8 + 0.3;
+      this.drift = (Math.random() - 0.5) * 0.5;
+      this.alpha = Math.random() * 0.5 + 0.1;
+      this.hue = Math.random() > 0.5 ? 185 : 270;
+    }
+    update() {
+      this.y -= this.speed;
+      this.x += this.drift;
+      if (this.y < -20) this.reset();
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(${this.hue}, 100%, 70%, ${this.alpha})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+      // 高光
+      ctx.beginPath();
+      ctx.arc(this.x - this.r * 0.3, this.y - this.r * 0.3, this.r * 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue}, 100%, 90%, ${this.alpha * 0.8})`;
+      ctx.fill();
+    }
+  }
+
+  // 光束粒子
+  class GlowDot {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.r = Math.random() * 2 + 0.5;
+      this.alpha = 0;
+      this.maxAlpha = Math.random() * 0.6 + 0.1;
+      this.life = 0;
+      this.maxLife = Math.random() * 200 + 100;
+      this.hue = Math.random() > 0.6 ? 185 : 270;
+    }
+    update() {
+      this.life++;
+      const t = this.life / this.maxLife;
+      this.alpha = t < 0.3 ? (t / 0.3) * this.maxAlpha
+                 : t > 0.7 ? ((1 - t) / 0.3) * this.maxAlpha
+                 : this.maxAlpha;
+      if (this.life > this.maxLife) this.reset();
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${this.alpha})`;
+      ctx.fill();
+      // 光晕
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 3, 0, Math.PI * 2);
+      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 3);
+      g.addColorStop(0, `hsla(${this.hue}, 100%, 70%, ${this.alpha * 0.3})`);
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+  }
+
+  // 深海光束
+  class DeepRay {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.width = Math.random() * 60 + 20;
+      this.alpha = Math.random() * 0.04 + 0.01;
+      this.speed = Math.random() * 0.3 + 0.1;
+    }
+    update() {
+      this.x += this.speed;
+      if (this.x > W + this.width) this.reset(), this.x = -this.width;
+    }
+    draw() {
+      const g = ctx.createLinearGradient(this.x, 0, this.x + this.width, H);
+      g.addColorStop(0, 'transparent');
+      g.addColorStop(0.3, `rgba(0,245,255,${this.alpha})`);
+      g.addColorStop(0.7, `rgba(157,78,221,${this.alpha * 0.5})`);
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.fillRect(this.x, 0, this.width, H);
+    }
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  // 初始化粒子
+  for (let i = 0; i < 80; i++) {
+    const b = new Bubble();
+    b.y = Math.random() * H;
+    particles.push(b);
+  }
+  for (let i = 0; i < 60; i++) tentacles.push(new GlowDot());
+  const rays = Array.from({ length: 5 }, () => new DeepRay());
+
+  function render() {
+    // 背景
+    ctx.fillStyle = '#010810';
+    ctx.fillRect(0, 0, W, H);
+
+    // 深海径向渐变
+    const bg = ctx.createRadialGradient(W*0.5, H*0.3, 0, W*0.5, H*0.5, Math.max(W,H)*0.8);
+    bg.addColorStop(0, 'rgba(0,10,40,0.8)');
+    bg.addColorStop(0.4, 'rgba(0,5,20,0.6)');
+    bg.addColorStop(0.7, 'rgba(10,0,30,0.4)');
+    bg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    rays.forEach(r => { r.update(); r.draw(); });
+    particles.forEach(p => { p.update(); p.draw(); });
+    tentacles.forEach(t => { t.update(); t.draw(); });
+
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+
+// ════════════════════════════════
+// 球队数据
+// ════════════════════════════════
+const TEAMS = [
+  // 南美
+  { id: 'brazil', name: 'Brazil', flag: '🇧🇷', region: 'SAM', rank: 5, attack: 90, defense: 82, form: 88 },
+  { id: 'argentina', name: 'Argentina', flag: '🇦🇷', region: 'SAM', rank: 1, attack: 93, defense: 85, form: 92 },
+  { id: 'uruguay', name: 'Uruguay', flag: '🇺🇾', region: 'SAM', rank: 12, attack: 78, defense: 83, form: 75 },
+  { id: 'colombia', name: 'Colombia', flag: '🇨🇴', region: 'SAM', rank: 9, attack: 82, defense: 75, form: 80 },
+  { id: 'chile', name: 'Chile', flag: '🇨🇱', region: 'SAM', rank: 22, attack: 74, defense: 70, form: 68 },
+  // 欧洲
+  { id: 'france', name: 'France', flag: '🇫🇷', region: 'EUR', rank: 2, attack: 91, defense: 87, form: 89 },
+  { id: 'england', name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', region: 'EUR', rank: 4, attack: 86, defense: 84, form: 85 },
+  { id: 'spain', name: 'Spain', flag: '🇪🇸', region: 'EUR', rank: 3, attack: 88, defense: 83, form: 87 },
+  { id: 'germany', name: 'Germany', flag: '🇩🇪', region: 'EUR', rank: 13, attack: 84, defense: 80, form: 78 },
+  { id: 'portugal', name: 'Portugal', flag: '🇵🇹', region: 'EUR', rank: 6, attack: 87, defense: 79, form: 84 },
+  { id: 'netherlands', name: 'Netherlands', flag: '🇳🇱', region: 'EUR', rank: 7, attack: 85, defense: 80, form: 82 },
+  { id: 'italy', name: 'Italy', flag: '🇮🇹', region: 'EUR', rank: 8, attack: 81, defense: 86, form: 76 },
+  { id: 'belgium', name: 'Belgium', flag: '🇧🇪', region: 'EUR', rank: 3, attack: 85, defense: 79, form: 78 },
+  { id: 'croatia', name: 'Croatia', flag: '🇭🇷', region: 'EUR', rank: 10, attack: 79, defense: 78, form: 74 },
+  { id: 'switzerland', name: 'Switzerland', flag: '🇨🇭', region: 'EUR', rank: 18, attack: 76, defense: 77, form: 73 },
+  // 非洲
+  { id: 'senegal', name: 'Senegal', flag: '🇸🇳', region: 'AFR', rank: 20, attack: 77, defense: 73, form: 76 },
+  { id: 'morocco', name: 'Morocco', flag: '🇲🇦', region: 'AFR', rank: 14, attack: 78, defense: 82, form: 80 },
+  { id: 'nigeria', name: 'Nigeria', flag: '🇳🇬', region: 'AFR', rank: 38, attack: 73, defense: 64, form: 65 },
+  { id: 'ghana', name: 'Ghana', flag: '🇬🇭', region: 'AFR', rank: 57, attack: 68, defense: 62, form: 60 },
+  // 亚洲
+  { id: 'japan', name: 'Japan', flag: '🇯🇵', region: 'ASI', rank: 17, attack: 78, defense: 74, form: 79 },
+  { id: 'korea', name: 'South Korea', flag: '🇰🇷', region: 'ASI', rank: 24, attack: 76, defense: 72, form: 74 },
+  { id: 'iran', name: 'Iran', flag: '🇮🇷', region: 'ASI', rank: 21, attack: 73, defense: 75, form: 70 },
+  { id: 'australia', name: 'Australia', flag: '🇦🇺', region: 'ASI', rank: 25, attack: 72, defense: 69, form: 68 },
+  { id: 'usa', name: 'USA', flag: '🇺🇸', region: 'CON', rank: 11, attack: 80, defense: 75, form: 77 },
+  { id: 'mexico', name: 'Mexico', flag: '🇲🇽', region: 'CON', rank: 16, attack: 77, defense: 73, form: 72 },
+  { id: 'canada', name: 'Canada', flag: '🇨🇦', region: 'CON', rank: 48, attack: 66, defense: 65, form: 64 },
+];
+
+function populateSelect(selId) {
+  const sel = document.getElementById(selId);
+  const regions = { SAM:'南美 SOUTH AMERICA', EUR:'欧洲 EUROPE', AFR:'非洲 AFRICA', ASI:'亚洲/大洋洲 ASIA', CON:'北美 CONCACAF' };
+  const grouped = {};
+  TEAMS.forEach(t => { if (!grouped[t.region]) grouped[t.region] = []; grouped[t.region].push(t); });
+  Object.entries(regions).forEach(([code, label]) => {
+    if (!grouped[code]) return;
+    const og = document.createElement('optgroup');
+    og.label = label;
+    grouped[code].forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = `${t.flag} ${t.name}`;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function updateTeamDisplay(side) {
+  const selId = side === 'home' ? 'homeTeam' : 'awayTeam';
+  const teamId = document.getElementById(selId).value;
+  const team = TEAMS.find(t => t.id === teamId);
+
+  if (!team) {
+    document.getElementById(side + 'Flag').textContent = '🏳️';
+    document.getElementById(side + 'TeamName').textContent = side === 'home' ? 'HOME TEAM' : 'AWAY TEAM';
+    document.getElementById(side + 'Rank').textContent = 'FIFA RANK: --';
+    document.getElementById(side + 'Stats').style.display = 'none';
+    return;
+  }
+
+  document.getElementById(side + 'Flag').textContent = team.flag;
+  document.getElementById(side + 'TeamName').textContent = team.name.toUpperCase();
+  document.getElementById(side + 'Rank').textContent = `FIFA RANK: #${team.rank}`;
+  document.getElementById(side + 'Stats').style.display = 'flex';
+
+  // 动画延迟加载进度条
+  setTimeout(() => {
+    document.getElementById(side + 'Atk').style.width = team.attack + '%';
+    document.getElementById(side + 'Def').style.width = team.defense + '%';
+    document.getElementById(side + 'Form').style.width = team.form + '%';
+  }, 50);
+}
+
+populateSelect('homeTeam');
+populateSelect('awayTeam');
+
+// ════════════════════════════════
+// 预测逻辑
+// ════════════════════════════════
+const LOADING_MSGS = [
+  'ACTIVATING NEURAL TENTACLES...',
+  'CONSULTING THE DEEP ORACLE...',
+  'PROCESSING COSMIC FOOTBALL DATA...',
+  'PAUL IS ANALYZING THE MATCH...',
+  'SCANNING PARALLEL UNIVERSES...',
+  'CALIBRATING PROPHECY ENGINE...',
+  'TENTACLE COMPUTATION RUNNING...',
+  'EXTRACTING MYSTICAL PATTERNS...',
+];
+
+function predict() {
+  const homeId = document.getElementById('homeTeam').value;
+  const awayId = document.getElementById('awayTeam').value;
+  if (!homeId || !awayId) {
+    alert('🐙 Please select both teams for the oracle to analyze!');
+    return;
+  }
+  if (homeId === awayId) {
+    alert('🔮 The oracle cannot predict a team against itself!');
+    return;
+  }
+
+  const home = TEAMS.find(t => t.id === homeId);
+  const away = TEAMS.find(t => t.id === awayId);
+  const matchType = document.getElementById('matchType').value;
+  const homeAdv = document.getElementById('homeAdvantage').value;
+
+  // 显示加载
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('loading').classList.add('active');
+
+  let msgIdx = 0;
+  const msgInterval = setInterval(() => {
+    document.getElementById('loadingText').textContent = LOADING_MSGS[msgIdx % LOADING_MSGS.length];
+    msgIdx++;
+  }, 600);
+
+  setTimeout(() => {
+    clearInterval(msgInterval);
+    document.getElementById('loading').classList.remove('active');
+
+    const result = calcPrediction(home, away, matchType, homeAdv);
+    displayResult(result, home, away);
+    document.getElementById('result').classList.add('show');
+
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 3500);
+}
+
+// ── 公共工具 ──────────────────────────────────────────
+function poisson(lambda, k) {
+  let p = Math.exp(-lambda);
+  for (let i = 1; i <= k; i++) p *= lambda / i;
+  return p;
+}
+
+function scoreMatrix(homeLambda, awayLambda) {
+  const scores = [];
+  let homeWin = 0, draw = 0, awayWin = 0;
+  for (let h = 0; h <= 6; h++) {
+    for (let a = 0; a <= 6; a++) {
+      const p = poisson(homeLambda, h) * poisson(awayLambda, a);
+      scores.push({ home: h, away: a, prob: p });
+      if (h > a) homeWin += p;
+      else if (h === a) draw += p;
+      else awayWin += p;
+    }
+  }
+  const total = homeWin + draw + awayWin;
+  scores.sort((a, b) => b.prob - a.prob);
+  return { scores: scores.slice(0, 12), homeWin: homeWin/total, draw: draw/total, awayWin: awayWin/total };
+}
+
+function advBonus(homeAdv) {
+  return homeAdv === 'home' ? 0.25 : homeAdv === 'away' ? -0.15 : 0;
+}
+
+function matchMult(matchType) {
+  return matchType === 'final' ? 0.82 : matchType === 'knockout' ? 0.9 : 1;
+}
+
+function h2hStats(home, away, rankDiff) {
+  const h2hHome = Math.round(home.form * 0.4 + rankDiff * 5 + 10);
+  const h2hAway = Math.round(away.form * 0.35 - rankDiff * 5 + 8);
+  const h2hDraw = Math.max(3, 40 - h2hHome - h2hAway);
+  return { h2hHome, h2hDraw, h2hAway };
+}
+
+// ── 模型1：保罗神谕（综合加权 + 神秘随机因子）──────────
+function modelPaul(home, away, matchType, homeAdv) {
+  const adv = advBonus(homeAdv);
+  const mult = matchMult(matchType);
+  const rankDiff = (away.rank - home.rank) * 0.009;
+
+  // 综合能力分（攻防+状态三维加权）
+  const homeStr = (home.attack * 0.45 + home.defense * 0.3 + home.form * 0.25) / 100;
+  const awayStr = (away.attack * 0.45 + away.defense * 0.3 + away.form * 0.25) / 100;
+
+  // 神秘章鱼随机扰动（±8%，模拟预言的不确定性）
+  const paulFactor = 1 + (Math.sin(home.rank * away.rank * 0.137) * 0.08);
+
+  let homeLambda = (homeStr * 2.4 + rankDiff + adv) * mult * paulFactor;
+  let awayLambda = (awayStr * 2.1 - rankDiff - adv * 0.6) * mult / paulFactor;
+  homeLambda = Math.max(0.3, homeLambda - (100 - away.defense) / 220);
+  awayLambda = Math.max(0.3, awayLambda - (100 - home.defense) / 220);
+
+  const { scores, homeWin, draw, awayWin } = scoreMatrix(homeLambda, awayLambda);
+  const homePoss = Math.round(50 + (home.attack - away.attack) * 0.28 + adv * 10);
+  const confidence = Math.round(72 + Math.abs(homeWin - awayWin) * 22);
+  return {
+    scores, homeWin, draw, awayWin,
+    homeShots: Math.round(homeLambda * 6.5 + 3),
+    awayShots: Math.round(awayLambda * 6.5 + 3),
+    homePoss, expGoals: (homeLambda + awayLambda).toFixed(1),
+    confidence, modelDesc: '综合加权 + 神秘章鱼因子',
+    ...h2hStats(home, away, rankDiff)
+  };
+}
+
+// ── 模型2：泊松分布（纯数学，仅用进攻/防守期望进球）──
+function modelPoisson(home, away, matchType, homeAdv) {
+  const adv = advBonus(homeAdv);
+  const mult = matchMult(matchType);
+
+  // 联赛平均进球基准 1.35 / 1.05
+  const BASE_HOME = 1.35, BASE_AWAY = 1.05;
+  const homeAttackRate = home.attack / 75;   // 相对联赛均值
+  const homeDefRate    = home.defense / 75;
+  const awayAttackRate = away.attack / 75;
+  const awayDefRate    = away.defense / 75;
+
+  // 泊松期望：主队 = 基准 × 主攻击率 × 客防守弱化率
+  let homeLambda = BASE_HOME * homeAttackRate * (1 / awayDefRate) * (1 + adv * 0.15) * mult;
+  let awayLambda = BASE_AWAY * awayAttackRate * (1 / homeDefRate) * (1 - adv * 0.1) * mult;
+  homeLambda = Math.max(0.2, homeLambda);
+  awayLambda = Math.max(0.2, awayLambda);
+
+  const { scores, homeWin, draw, awayWin } = scoreMatrix(homeLambda, awayLambda);
+  const rankDiff = (away.rank - home.rank) * 0.009;
+  const homePoss = Math.round(50 + (homeAttackRate - awayAttackRate) * 15);
+  const confidence = Math.round(65 + Math.abs(homeWin - awayWin) * 20);
+  return {
+    scores, homeWin, draw, awayWin,
+    homeShots: Math.round(homeLambda * 7 + 2),
+    awayShots: Math.round(awayLambda * 7 + 2),
+    homePoss, expGoals: (homeLambda + awayLambda).toFixed(1),
+    confidence, modelDesc: '独立泊松分布 · 进球期望模型',
+    ...h2hStats(home, away, rankDiff)
+  };
+}
+
+// ── 模型3：ELO评分（逻辑斯蒂胜率 → 再映射为进球分布）──
+function modelELO(home, away, matchType, homeAdv) {
+  const adv = advBonus(homeAdv);
+  const mult = matchMult(matchType);
+
+  // 将FIFA排名转为伪ELO（排名越低分越高）
+  const homeELO = 2000 - home.rank * 15 + home.form * 2;
+  const awayELO = 2000 - away.rank * 15 + away.form * 2;
+  const eloDiff = homeELO - awayELO + adv * 80;
+
+  // Logistic胜率公式
+  const eloWinProb = 1 / (1 + Math.pow(10, -eloDiff / 400));
+  const eloDrawProb = 0.28 * (1 - Math.abs(eloDiff) / 800);   // 差距越大平局越少
+  const eloAwayProb = 1 - eloWinProb - Math.max(0, eloDrawProb);
+
+  // 将ELO胜率反推泊松lambda（用于生成比分分布）
+  // 胜率高的队lambda更大
+  let homeLambda = (1.1 + eloWinProb * 1.2) * mult;
+  let awayLambda = (1.1 + (1 - eloWinProb) * 1.0) * mult;
+  homeLambda = Math.max(0.3, homeLambda);
+  awayLambda = Math.max(0.3, awayLambda);
+
+  const { scores, homeWin: hw, draw: dr, awayWin: aw } = scoreMatrix(homeLambda, awayLambda);
+
+  // 用ELO直接覆盖泊松算出的胜率（更准确体现ELO逻辑）
+  const totalELO = Math.max(eloWinProb + Math.max(0,eloDrawProb) + Math.max(0,eloAwayProb), 0.001);
+  const rankDiff = (away.rank - home.rank) * 0.009;
+  const confidence = Math.round(60 + Math.abs(eloDiff) / 20);
+  return {
+    scores,
+    homeWin: Math.max(0, eloWinProb),
+    draw: Math.max(0, eloDrawProb),
+    awayWin: Math.max(0, eloAwayProb),
+    homeShots: Math.round(homeLambda * 6 + 4),
+    awayShots: Math.round(awayLambda * 6 + 4),
+    homePoss: Math.round(50 + eloDiff / 30),
+    expGoals: (homeLambda + awayLambda).toFixed(1),
+    confidence: Math.min(95, confidence),
+    modelDesc: `ELO差值 ${eloDiff > 0 ? '+' : ''}${Math.round(eloDiff)} · 逻辑斯蒂胜率`,
+    ...h2hStats(home, away, rankDiff)
+  };
+}
+
+// ── 模型4：机器学习模拟（多特征线性回归 + Sigmoid）──────
+function modelML(home, away, matchType, homeAdv) {
+  const adv = advBonus(homeAdv);
+  const mult = matchMult(matchType);
+
+  // 特征工程：归一化各维度
+  const f1 = (home.attack - away.attack) / 100;         // 攻击差
+  const f2 = (home.defense - away.defense) / 100;        // 防守差
+  const f3 = (home.form - away.form) / 100;              // 状态差
+  const f4 = (away.rank - home.rank) / 100;              // 排名差（越低越强）
+  const f5 = adv;                                        // 主场优势
+
+  // 回归系数（模拟训练好的权重）
+  const W = [1.8, 1.2, 1.0, 0.9, 0.6];
+  const score = f1*W[0] + f2*W[1] + f3*W[2] + f4*W[3] + f5*W[4];
+
+  // Sigmoid → 主队净胜球期望
+  const sigmoid = x => 1 / (1 + Math.exp(-x));
+  const homeAdvProb = sigmoid(score);   // 0.5以上主队占优
+
+  // 映射到lambda
+  let homeLambda = (0.8 + homeAdvProb * 1.8) * mult;
+  let awayLambda = (0.8 + (1 - homeAdvProb) * 1.6) * mult;
+
+  // 附加：形态惩罚（差状态队lambda下降）
+  homeLambda *= (0.7 + home.form / 330);
+  awayLambda *= (0.7 + away.form / 330);
+  homeLambda = Math.max(0.25, homeLambda);
+  awayLambda = Math.max(0.25, awayLambda);
+
+  const { scores, homeWin, draw, awayWin } = scoreMatrix(homeLambda, awayLambda);
+  const rankDiff = (away.rank - home.rank) * 0.009;
+  const confidence = Math.round(68 + Math.abs(score) * 12);
+  return {
+    scores, homeWin, draw, awayWin,
+    homeShots: Math.round(homeLambda * 6.8 + 2.5),
+    awayShots: Math.round(awayLambda * 6.8 + 2.5),
+    homePoss: Math.round(50 + score * 18),
+    expGoals: (homeLambda + awayLambda).toFixed(1),
+    confidence: Math.min(95, confidence),
+    modelDesc: `ML特征分 ${score.toFixed(3)} · Sigmoid回归`,
+    ...h2hStats(home, away, rankDiff)
+  };
+}
+
+// ── 总调度 ────────────────────────────────────────────
+function calcPrediction(home, away, matchType, homeAdv) {
+  const model = document.getElementById('model').value;
+  if (model === 'poisson') return modelPoisson(home, away, matchType, homeAdv);
+  if (model === 'elo')     return modelELO(home, away, matchType, homeAdv);
+  if (model === 'ml')      return modelML(home, away, matchType, homeAdv);
+  return modelPaul(home, away, matchType, homeAdv);  // 'advanced' / 保罗神谕
+}
+
+function animateNumber(el, target, suffix='%', duration=1200) {
+  const start = Date.now();
+  const num = parseFloat(target);
+  function step() {
+    const t = Math.min(1, (Date.now() - start) / duration);
+    const ease = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.round(num * ease) + suffix;
+    if (t < 1) requestAnimationFrame(step);
+  }
+  step();
+}
+
+function displayResult(r, home, away) {
+  const best = r.scores[0];
+  document.getElementById('mainScore').textContent = `${best.home} : ${best.away}`;
+  document.getElementById('scoreNote').textContent = `MOST LIKELY SCORE · ORACLE CONFIDENCE: ${r.confidence}%`;
+  document.getElementById('modelDesc').textContent = `⚙ MODEL: ${r.modelDesc}`;
+
+  const hw = Math.round(r.homeWin * 100);
+  const dr = Math.round(r.draw * 100);
+  const aw = 100 - hw - dr;
+
+  // 高亮最高概率
+  ['homeWinCard','drawCard','awayWinCard'].forEach(id => document.getElementById(id).classList.remove('best'));
+  if (r.homeWin >= r.draw && r.homeWin >= r.awayWin) document.getElementById('homeWinCard').classList.add('best');
+  else if (r.draw >= r.homeWin && r.draw >= r.awayWin) document.getElementById('drawCard').classList.add('best');
+  else document.getElementById('awayWinCard').classList.add('best');
+
+  setTimeout(() => {
+    animateNumber(document.getElementById('homeWinPct'), hw);
+    animateNumber(document.getElementById('drawPct'), dr);
+    animateNumber(document.getElementById('awayWinPct'), aw);
+    document.getElementById('homeWinBar').style.width = hw + '%';
+    document.getElementById('drawBar').style.width = dr + '%';
+    document.getElementById('awayWinBar').style.width = aw + '%';
+  }, 100);
+
+  // 比分网格
+  const grid = document.getElementById('scoresGrid');
+  grid.innerHTML = '';
+  r.scores.forEach((s, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'score-chip' + (i === 0 ? ' top-pick' : '');
+    chip.innerHTML = `<div class="chip-score">${s.home}:${s.away}</div><div class="chip-prob">${(s.prob*100).toFixed(1)}%</div>`;
+    chip.style.animationDelay = i * 80 + 'ms';
+    grid.appendChild(chip);
+  });
+
+  // 统计
+  document.getElementById('expGoals').textContent = r.expGoals;
+  document.getElementById('homeShotsVal').textContent = r.homeShots;
+  document.getElementById('homePossVal').textContent = r.homePoss + '%';
+  document.getElementById('confidenceVal').textContent = r.confidence + '%';
+
+  // H2H
+  const h2hTotal = r.h2hHome + r.h2hDraw + r.h2hAway;
+  setTimeout(() => {
+    document.getElementById('h2hHome').style.width = (r.h2hHome / h2hTotal * 100) + '%';
+    document.getElementById('h2hDraw').style.width = (r.h2hDraw / h2hTotal * 100) + '%';
+    document.getElementById('h2hAway').style.width = (r.h2hAway / h2hTotal * 100) + '%';
+    document.getElementById('h2hHomeLabel').textContent = `${home.name} 胜 ${r.h2hHome}`;
+    document.getElementById('h2hAwayLabel').textContent = `${away.name} 胜 ${r.h2hAway}`;
+  }, 300);
+}
+</script>
+</body>
+</html>
