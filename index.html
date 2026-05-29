@@ -369,16 +369,35 @@ async function loadMatches() {
   document.getElementById('dateDisplay').textContent = fmtDisplay(currentDate);
   var area = document.getElementById('matchesArea');
   area.innerHTML = '<div class="loading-wrap"><div class="spinner"></div><div>正在抓取赛程...</div></div>';
-  var dateStr = fmt(currentDate);
+  var dateStr = fmt(currentDate).replace(/-/g,'');
+  var url = 'https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates='+dateStr+'&limit=200';
   try {
-    var res = await fetch('/api/matches?date='+dateStr);
+    var res = await fetch(url);
     if (!res.ok) throw new Error('HTTP '+res.status);
     var data = await res.json();
-    allMatches = data.matches || [];
+    var events = data.events || [];
+    allMatches = events.map(function(ev) {
+      var comp = ev.competitions && ev.competitions[0];
+      var comps = (comp && comp.competitors) || [];
+      var home = comps.find(function(c){return c.homeAway==='home';}) || comps[0] || {};
+      var away = comps.find(function(c){return c.homeAway==='away';}) || comps[1] || {};
+      var status = (comp && comp.status && comp.status.type && comp.status.type.name) || '';
+      var league = (ev.league && ev.league.name) || 'International';
+      var leagueCode = (ev.league && ev.league.abbreviation) || 'INT';
+      return {
+        id: ev.id,
+        utcDate: ev.date,
+        homeTeam: { name: (home.team&&home.team.displayName)||'主队', shortName: (home.team&&home.team.shortDisplayName)||'' },
+        awayTeam: { name: (away.team&&away.team.displayName)||'客队', shortName: (away.team&&away.team.shortDisplayName)||'' },
+        status: status,
+        leagueName: league,
+        leagueCode: leagueCode
+      };
+    });
     buildLeagueFilter();
     renderMatches();
   } catch(e) {
-    area.innerHTML = '<div class="error-box">加载失败：'+e.message+'<br><small>请确认本地服务器正在运行</small></div>';
+    area.innerHTML = '<div class="error-box">加载失败：'+e.message+'<br><small>ESPN API 请求出错，请稍后重试</small></div>';
   }
 }
 
