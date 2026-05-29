@@ -1,0 +1,12 @@
+{
+  "name": "football-predictor",
+  "version": "1.0.0",
+  "description": "神谕足球预测 - ESPN实时赛程 + 4模型AI预测",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
