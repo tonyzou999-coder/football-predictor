@@ -1,112 +1,335 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>神谕足球预测</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 :root {
-  --bg: #0a0e1a;
-  --card: #111827;
-  --border: rgba(0,245,255,0.15);
-  --cyan: #00f5ff;
-  --pink: #ff2d78;
-  --gold: #ffd700;
-  --green: #00ff88;
+  --bg: #080c18;
+  --surface: #0f1523;
+  --card: #131c2e;
+  --card-hover: #1a2540;
+  --border: rgba(99,179,237,0.12);
+  --border-glow: rgba(99,179,237,0.3);
+  --cyan: #63b3ed;
+  --cyan-bright: #90cdf4;
+  --pink: #f687b3;
+  --pink-dark: #ed64a6;
+  --gold: #f6e05e;
+  --gold-dim: #ecc94b;
+  --green: #68d391;
+  --green-dark: #48bb78;
   --text: #e2e8f0;
-  --muted: rgba(255,255,255,0.45);
+  --text-sub: #a0aec0;
+  --muted: rgba(160,174,192,0.5);
+  --red: #fc8181;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'PingFang SC','Microsoft YaHei',sans-serif;
+  font-family: 'Inter','PingFang SC','Microsoft YaHei',sans-serif;
   min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99,179,237,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(246,135,179,0.05) 0%, transparent 50%);
 }
+
+/* ===== HEADER ===== */
 .header {
-  background: linear-gradient(135deg,#0d1b3e,#1a0a2e);
+  background: rgba(15,21,35,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  padding: 18px 24px;
+  padding: 0 28px;
+  height: 64px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
-.header-icon { font-size: 2rem; }
-.header-title { font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg,var(--cyan),var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.header-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header-logo {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #63b3ed, #f687b3);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(99,179,237,0.3);
+}
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  background: linear-gradient(90deg, var(--cyan-bright), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header-sub { font-size: 0.7rem; color: var(--muted); margin-top: 1px; letter-spacing: 0.3px; }
+.header-badge {
+  background: rgba(99,179,237,0.1);
+  border: 1px solid rgba(99,179,237,0.2);
+  color: var(--cyan);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ===== DATE NAV ===== */
 .date-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 16px 24px;
-  background: rgba(0,0,0,0.3);
+  gap: 12px;
+  padding: 14px 28px;
+  background: rgba(0,0,0,0.2);
   border-bottom: 1px solid var(--border);
 }
 .date-btn {
-  background: rgba(0,245,255,0.1);
+  background: rgba(99,179,237,0.07);
   border: 1px solid var(--border);
-  color: var(--cyan);
-  padding: 8px 18px;
+  color: var(--text-sub);
+  padding: 7px 16px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.2s;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.18s;
+  font-family: inherit;
 }
-.date-btn:hover { background: rgba(0,245,255,0.2); }
-.date-display {
-  font-size: 1.05rem;
-  font-weight: 600;
+.date-btn:hover {
+  background: rgba(99,179,237,0.15);
+  border-color: var(--border-glow);
+  color: var(--cyan);
+}
+.date-btn.today-btn {
+  background: rgba(246,224,94,0.12);
+  border-color: rgba(246,224,94,0.4);
   color: var(--gold);
-  min-width: 160px;
+  font-size: 0.72rem;
+  padding: 7px 12px;
+  cursor: default;
+}
+.date-btn.today-btn:hover { background: rgba(246,224,94,0.12); }
+.date-btn:disabled { opacity: 0.9; }
+.date-display {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  min-width: 170px;
   text-align: center;
+  letter-spacing: -0.2px;
+}
+
+/* ===== LEAGUE FILTER ===== */
+.league-scroll-wrap {
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
 }
 .league-filter {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px 24px;
-  border-bottom: 1px solid var(--border);
+  flex-wrap: nowrap;
+  gap: 6px;
+  padding: 10px 52px 10px 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
+.league-filter::-webkit-scrollbar { display: none; }
+.league-filter { scrollbar-width: none; }
 .league-chip {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  color: var(--muted);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-sub);
   padding: 5px 12px;
-  border-radius: 20px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.78rem;
-  transition: all 0.2s;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-family: inherit;
 }
-.league-chip:hover { border-color: var(--cyan); color: var(--cyan); }
-.league-chip.active { background: rgba(0,245,255,0.15); border-color: var(--cyan); color: var(--cyan); }
-.matches-area { padding: 20px 24px; }
+.league-chip:hover { border-color: var(--border-glow); color: var(--cyan-bright); }
+.league-chip.active {
+  background: rgba(99,179,237,0.12);
+  border-color: rgba(99,179,237,0.35);
+  color: var(--cyan-bright);
+  font-weight: 600;
+}
+.league-scroll-arrow {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 52px;
+  background: linear-gradient(to right, transparent, rgba(8,12,24,0.97));
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.8rem;
+  transition: color 0.2s;
+  user-select: none;
+}
+.league-scroll-arrow:hover { color: var(--cyan); }
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  gap: 0;
+  padding: 0 28px;
+  background: rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-right: 1px solid var(--border);
+}
+.stat-item:last-child { border-right: none; }
+.stat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.stat-dot.live { background: var(--red); box-shadow: 0 0 6px var(--red); animation: blink 1s infinite; }
+.stat-dot.upcoming { background: var(--cyan); }
+.stat-dot.finished { background: var(--text-sub); }
+.stat-count { font-weight: 700; color: var(--text); }
+.stat-label { color: var(--muted); }
+
+/* ===== MATCHES AREA ===== */
+.matches-area { padding: 20px 28px 40px; }
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+.section-label:first-child { margin-top: 0; }
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-label.live-label { color: var(--red); }
+.section-label.upcoming-label { color: var(--cyan); }
+.section-label.finished-label { color: var(--text-sub); }
 .matches-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+  margin-bottom: 8px;
 }
+
+/* ===== MATCH CARD ===== */
 .match-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 14px 16px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+.match-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background 0.18s;
 }
 .match-card:hover {
-  border-color: var(--cyan);
-  box-shadow: 0 0 16px rgba(0,245,255,0.15);
+  background: var(--card-hover);
+  border-color: var(--border-glow);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(99,179,237,0.1);
 }
-.match-league {
-  font-size: 0.72rem;
-  color: var(--muted);
-  margin-bottom: 10px;
+.match-card:hover::before { background: linear-gradient(90deg, var(--cyan), var(--pink)); }
+.match-card.card-live { border-color: rgba(252,129,129,0.25); }
+.match-card.card-live::before { background: linear-gradient(90deg, var(--red), var(--pink)); }
+.match-card.card-finished {
+  opacity: 0.6;
+  cursor: default;
+}
+.match-card.card-finished:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border);
+  background: var(--card);
+}
+.match-card.card-finished:hover::before { background: transparent; }
+
+.match-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.match-league-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  background: rgba(255,255,255,0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 70%;
 }
+.match-status-badge {
+  font-size: 0.63rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+.badge-live {
+  background: rgba(252,129,129,0.15);
+  color: var(--red);
+  border: 1px solid rgba(252,129,129,0.3);
+}
+.badge-finished {
+  background: rgba(104,211,145,0.1);
+  color: var(--green);
+  border: 1px solid rgba(104,211,145,0.2);
+}
+.badge-upcoming {
+  background: rgba(99,179,237,0.08);
+  color: var(--text-sub);
+  border: 1px solid rgba(99,179,237,0.15);
+}
+.match-status-dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  background: var(--red);
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
+
 .match-teams {
   display: flex;
   align-items: center;
@@ -114,65 +337,93 @@ body {
   gap: 8px;
   margin-bottom: 10px;
 }
-.team-name {
-  font-size: 0.85rem;
-  font-weight: 600;
+.team-side {
   flex: 1;
+  min-width: 0;
+}
+.team-side.home { text-align: left; }
+.team-side.away { text-align: right; }
+.team-name {
+  font-size: 0.88rem;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--text);
+  letter-spacing: -0.2px;
 }
-.team-name.home { text-align: left; }
-.team-name.away { text-align: right; }
-.match-vs {
-  font-size: 0.8rem;
-  color: var(--muted);
-  min-width: 36px;
+.match-score-area {
   text-align: center;
   flex-shrink: 0;
+  min-width: 60px;
 }
-.match-vs.live { color: var(--pink); font-weight: 700; }
-.match-vs.finished { color: var(--muted); }
-.match-status-dot {
-  display: inline-block;
-  width: 6px; height: 6px;
-  background: var(--pink);
-  border-radius: 50%;
-  margin-right: 4px;
-  animation: blink 1s infinite;
+.score-display {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1;
 }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.match-time { font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
-.predict-hint { font-size: 0.7rem; color: rgba(0,245,255,0.4); text-align: right; }
+.score-display.vs-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+.score-home-win { color: var(--cyan-bright); }
+.score-away-win { color: var(--pink); }
+.score-draw { color: var(--text-sub); }
+.score-live { color: var(--red); }
+
+.match-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.match-time-text {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.predict-hint {
+  font-size: 0.68rem;
+  color: rgba(99,179,237,0.45);
+  font-weight: 500;
+}
+
+/* ===== LOADING / EMPTY ===== */
 .loading-wrap, .empty-wrap {
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
   color: var(--muted);
 }
 .spinner {
-  width: 40px; height: 40px;
-  border: 3px solid var(--border);
+  width: 36px; height: 36px;
+  border: 2px solid rgba(99,179,237,0.1);
   border-top-color: var(--cyan);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 16px;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 14px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.empty-icon { font-size: 2.5rem; margin-bottom: 14px; opacity: 0.5; }
+.empty-text { font-size: 0.9rem; }
 .error-box {
-  background: rgba(255,45,120,0.1);
-  border: 1px solid var(--pink);
+  background: rgba(252,129,129,0.07);
+  border: 1px solid rgba(252,129,129,0.25);
   border-radius: 10px;
-  padding: 20px;
-  color: var(--pink);
-  margin: 30px auto;
-  max-width: 500px;
+  padding: 24px;
+  color: var(--red);
+  margin: 40px auto;
+  max-width: 460px;
   text-align: center;
   line-height: 1.7;
 }
+
+/* ===== MODAL ===== */
 .modal-backdrop {
   display: none;
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
   z-index: 100;
   justify-content: center;
   align-items: center;
@@ -180,115 +431,215 @@ body {
 }
 .modal-backdrop.open { display: flex; }
 .modal {
-  background: linear-gradient(135deg,#0d1b3e,#1a0a2e);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
   width: 100%;
-  max-width: 540px;
-  max-height: 90vh;
+  max-width: 520px;
+  max-height: 92vh;
   overflow-y: auto;
-  padding: 28px;
+  padding: 24px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(99,179,237,0.08);
+  position: relative;
 }
+/* 弹窗顶部青色光晕 */
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 80%; height: 160px;
+  background: radial-gradient(ellipse at top, rgba(99,179,237,0.10) 0%, transparent 70%);
+  pointer-events: none;
+  border-radius: 16px 16px 0 0;
+  z-index: 0;
+}
+.modal::-webkit-scrollbar { width: 4px; }
+.modal::-webkit-scrollbar-track { background: transparent; }
+.modal::-webkit-scrollbar-thumb { background: rgba(99,179,237,0.2); border-radius: 2px; }
+.modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px; }
 .modal-close {
-  float: right;
-  background: none;
-  border: none;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
   color: var(--muted);
-  font-size: 1.4rem;
+  width: 28px; height: 28px;
+  border-radius: 6px;
   cursor: pointer;
-  line-height: 1;
+  font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
 }
-.modal-close:hover { color: var(--text); }
-.modal-title { font-size: 1.15rem; font-weight: 700; color: var(--cyan); margin-bottom: 4px; }
-.modal-league { font-size: 0.78rem; color: var(--muted); margin-bottom: 20px; }
+.modal-close:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+.modal-title { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+/* 鑱旇禌鍚嶅僵鑹叉爣绛?*/
+.modal-league {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--cyan-bright);
+  background: rgba(99,179,237,0.1);
+  border: 1px solid rgba(99,179,237,0.25);
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  margin-top: 2px;
+  letter-spacing: 0.3px;
+}
 .modal-matchup {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 20px;
+  background: linear-gradient(135deg, rgba(99,179,237,0.07) 0%, rgba(0,0,0,0.25) 50%, rgba(246,135,179,0.07) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 16px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.modal-matchup::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 100% at 50% 50%, rgba(99,179,237,0.04), transparent);
+  pointer-events: none;
 }
 .modal-team { text-align: center; flex: 1; }
-.modal-team-name { font-size: 0.9rem; font-weight: 600; }
-.modal-vs { color: var(--muted); font-size: 1.2rem; font-weight: 700; flex-shrink: 0; }
-.modal-time { text-align: center; color: var(--muted); font-size: 0.8rem; margin-bottom: 20px; }
-.models-title { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.modal-team-name { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.modal-team-role {
+  font-size: 0.63rem;
+  color: var(--muted);
+  margin-top: 5px;
+  background: rgba(255,255,255,0.05);
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+}
+.modal-vs { color: var(--muted); font-size: 1.1rem; font-weight: 800; flex-shrink: 0; letter-spacing: 2px; opacity: 0.55; }
+.modal-time { text-align: center; color: var(--muted); font-size: 0.75rem; margin-bottom: 18px; letter-spacing: 0.2px; }
+.models-title {
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
 .model-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
 .model-btn {
   flex: 1;
   min-width: 100px;
-  padding: 10px;
+  padding: 12px 8px;
   border-radius: 8px;
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
+  background: rgba(255,255,255,0.03);
+  color: var(--text-sub);
   cursor: pointer;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  font-weight: 500;
   text-align: center;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
-.model-btn:hover { border-color: var(--cyan); }
-.model-btn.active { border-color: var(--cyan); background: rgba(0,245,255,0.1); color: var(--cyan); }
+.model-btn:hover { border-color: var(--border-glow); color: var(--cyan-bright); transform: translateY(-1px); }
+.model-btn.active {
+  border-color: rgba(99,179,237,0.5);
+  background: rgba(99,179,237,0.12);
+  color: var(--cyan-bright);
+  font-weight: 600;
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(99,179,237,0.2), 0 0 0 1px rgba(99,179,237,0.15);
+}
+.model-btn-icon { font-size: 1.15rem; line-height: 1; flex-shrink:0; }
+.model-btn-label { font-size: 0.78rem; font-weight: 600; }
+.model-btn-sub { font-size: 0.62rem; color: var(--muted); }
+.model-tier-badge { margin-left:auto; font-size:0.58rem; font-weight:700; padding:2px 7px; border-radius:10px; flex-shrink:0; letter-spacing:0.5px; }
+.tier-basic { background:rgba(104,211,145,0.12); color:var(--green); border:1px solid rgba(104,211,145,0.25); }
+.tier-mid { background:rgba(246,224,94,0.12); color:var(--gold); border:1px solid rgba(246,224,94,0.25); }
+.tier-god { background:rgba(246,135,179,0.15); color:var(--pink); border:1px solid rgba(246,135,179,0.3); }
+.result-score-pred { text-align:center; font-size:1.6rem; font-weight:800; letter-spacing:6px; margin:8px 0 14px; color:var(--cyan-bright); }
+.result-factors { margin-top:10px; display:flex; flex-wrap:wrap; gap:5px; }
+.factor-chip { font-size:0.63rem; padding:3px 8px; border-radius:10px; border:1px solid var(--border); color:var(--text-sub); background:rgba(255,255,255,0.03); }
+@keyframes summon-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(99,179,237,0.3), 0 0 24px rgba(246,100,163,0.15); }
+  50% { box-shadow: 0 0 22px rgba(99,179,237,0.5), 0 0 40px rgba(246,100,163,0.3); }
+}
 .summon-btn {
   width: 100%;
   padding: 14px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg,var(--cyan),var(--pink));
-  color: #000;
-  font-size: 1rem;
+  background: linear-gradient(135deg, var(--cyan), var(--pink-dark));
+  color: #fff;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  margin-top: 16px;
-  transition: opacity 0.2s;
+  margin-top: 14px;
+  transition: opacity 0.2s, transform 0.15s;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  animation: summon-glow 2.4s ease-in-out infinite;
 }
-.summon-btn:hover { opacity: 0.9; }
-.summon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.summon-btn:hover { opacity: 0.92; transform: translateY(-2px); animation: none; box-shadow: 0 8px 24px rgba(99,179,237,0.4); }
+.summon-btn:active { transform: translateY(0); }
+.summon-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; animation: none; box-shadow: none; }
+
+/* ===== PREDICTION RESULT ===== */
 .prediction-result {
-  margin-top: 20px;
-  background: rgba(0,0,0,0.3);
+  margin-top: 18px;
+  background: rgba(0,0,0,0.2);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 16px;
   display: none;
 }
 .prediction-result.show { display: block; }
-.result-model-name { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; }
-.result-winner { font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
-.result-probs { display: flex; gap: 8px; margin-bottom: 10px; }
-.prob-bar-wrap { flex: 1; }
-.prob-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
-.prob-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); overflow: hidden; }
-.prob-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg,var(--cyan),var(--pink)); transition: width 0.6s ease; }
-.result-analysis { font-size: 0.82rem; color: var(--text); line-height: 1.7; }
-.result-key-factor { margin-top: 8px; font-size: 0.78rem; color: var(--cyan); }
-.all-results { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; display: none; }
+.result-model-name { font-size: 0.7rem; color: var(--muted); margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+.result-winner { font-size: 1rem; font-weight: 700; color: var(--gold); margin-bottom: 12px; }
+.result-probs { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
+.prob-bar-wrap {}
+.prob-label { font-size: 0.7rem; color: var(--text-sub); margin-bottom: 4px; display: flex; justify-content: space-between; font-weight: 500; }
+.prob-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.prob-fill { height: 100%; border-radius: 3px; transition: width 0.7s cubic-bezier(0.4,0,0.2,1); }
+.result-analysis { font-size: 0.8rem; color: var(--text-sub); line-height: 1.7; }
+.result-key-factor { margin-top: 8px; font-size: 0.75rem; color: var(--cyan); font-weight: 500; }
+.all-results { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; display: none; }
 .all-results.show { display: block; }
-.all-results-title { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
-.result-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; }
+.all-results-title { font-size: 0.65rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.result-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.78rem; }
 .result-row:last-child { border-bottom: none; }
-.result-row-model { color: var(--muted); }
+.result-row-model { color: var(--text-sub); }
 .result-row-pick { color: var(--gold); font-weight: 600; }
-.consensus { margin-top: 12px; padding: 10px; background: rgba(0,245,255,0.05); border-radius: 8px; font-size: 0.82rem; color: var(--cyan); text-align: center; }
+.consensus { margin-top: 10px; padding: 10px 12px; background: rgba(99,179,237,0.05); border: 1px solid rgba(99,179,237,0.12); border-radius: 8px; font-size: 0.78rem; color: var(--cyan); text-align: center; }
 </style>
 </head>
 <body>
 <div class="header">
-  <div class="header-icon">🔮</div>
-  <div>
-    <div class="header-title">神谕足球预测</div>
-    <div class="header-sub">ESPN 实时赛程 · 4模型AI预测 · 无API限制</div>
+  <div class="header-left">
+    <div class="header-logo">🔮</div>
+    <div>
+      <div class="header-title">神谕足球预测</div>
+      <div class="header-sub">ESPN 实时赛程 · AI 多模型预测</div>
+    </div>
   </div>
+  <div class="header-badge" id="matchCountBadge">加载中...</div>
 </div>
 <div class="date-nav">
-  <button class="date-btn" onclick="changeDate(-1)">◀ 昨天</button>
+  <button class="date-btn" onclick="changeDate(-1)">◀ 前一天</button>
   <div class="date-display" id="dateDisplay">--</div>
-  <button class="date-btn" onclick="changeDate(1)">明天 ▶</button>
+  <button class="date-btn" id="todayBtn" onclick="goToday()">回今天</button>
+  <button class="date-btn" onclick="changeDate(1)">后一天 ▶</button>
 </div>
-<div class="league-filter" id="leagueFilter"></div>
+<div class="league-scroll-wrap">
+  <div class="league-filter" id="leagueFilter"></div>
+  <div class="league-scroll-arrow" onclick="scrollLeague()" title="滚动查看更多">›</div>
+</div>
+<div class="stats-bar" id="statsBar"></div>
 <div class="matches-area" id="matchesArea">
   <div class="loading-wrap"><div class="spinner"></div><div>加载中...</div></div>
 </div>
@@ -300,188 +651,858 @@ body {
     <div class="modal-matchup">
       <div class="modal-team">
         <div class="modal-team-name" id="modalHome">-</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:4px">主队</div>
+        <div class="modal-team-role">主队</div>
       </div>
       <div class="modal-vs">VS</div>
       <div class="modal-team">
         <div class="modal-team-name" id="modalAway">-</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:4px">客队</div>
+        <div class="modal-team-role">客队</div>
       </div>
     </div>
     <div class="modal-time" id="modalTime"></div>
-    <div class="models-title">选择预测模型</div>
-    <div class="model-row">
-      <div class="model-btn active" data-model="poisson" onclick="selectModel(this)">
-        <div>📊 泊松模型</div>
-        <div style="font-size:0.68rem;color:var(--muted);margin-top:3px">进球率统计</div>
-      </div>
-      <div class="model-btn" data-model="elo" onclick="selectModel(this)">
-        <div>🏆 ELO评级</div>
-        <div style="font-size:0.68rem;color:var(--muted);margin-top:3px">实力差距</div>
-      </div>
+    <!-- 复盘区域（已结束比赛专用） -->
+    <div id="reviewSection" style="display:none">
+      <div id="reviewScore" style="text-align:center;font-size:2rem;font-weight:700;margin:16px 0;letter-spacing:4px"></div>
+      <div id="reviewResult" style="text-align:center;font-size:0.85rem;color:var(--text-sub);margin-bottom:16px"></div>
+      <div style="font-size:0.7rem;color:var(--muted);text-align:center;padding:10px 0;border-top:1px solid var(--border)">数据来源：ESPN · 如有延迟以官方为准</div>
     </div>
-    <div class="model-row">
-      <div class="model-btn" data-model="form" onclick="selectModel(this)">
-        <div>🔥 状态分析</div>
-        <div style="font-size:0.68rem;color:var(--muted);margin-top:3px">近期表现</div>
+    <!-- 预测区域（待开赛 / 直播中专用） -->
+    <div id="predSection">
+    <div class="models-title">选择预测模型</div>
+    <div class="model-row" style="flex-direction:column;gap:6px">
+      <div class="model-btn active" data-model="luopan" onclick="selectModel(this)" style="flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;min-width:unset">
+        <div class="model-btn-icon">🧭</div>
+        <div>
+          <div class="model-btn-label">星象罗盘</div>
+          <div class="model-btn-sub">积分榜驱动 · 泊松精算 · 基础精准</div>
+        </div>
+        <div class="model-tier-badge tier-basic">基础</div>
       </div>
-      <div class="model-btn" data-model="all" onclick="selectModel(this)">
-        <div>✨ 全模型</div>
-        <div style="font-size:0.68rem;color:var(--muted);margin-top:3px">综合共识</div>
+      <div class="model-btn" data-model="zhanshen" onclick="selectModel(this)" style="flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;min-width:unset">
+        <div class="model-btn-icon">⚔️</div>
+        <div>
+          <div class="model-btn-label">战神推演</div>
+          <div class="model-btn-sub">近战战绩 · H2H对阵 · 伤停修正</div>
+        </div>
+        <div class="model-tier-badge tier-mid">中级</div>
+      </div>
+      <div class="model-btn" data-model="tianji" onclick="selectModel(this)" style="flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;min-width:unset">
+        <div class="model-btn-icon">🌌</div>
+        <div>
+          <div class="model-btn-label">天机神算</div>
+          <div class="model-btn-sub">全因子 · 天气 · 蒙特卡洛 · 极限精算</div>
+        </div>
+        <div class="model-tier-badge tier-god">神级</div>
       </div>
     </div>
     <button class="summon-btn" id="summonBtn" onclick="runPrediction()">召唤神谕 🔮</button>
+    <div style="font-size:0.65rem;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5">
+      ⚠️ 预测结果仅供娱乐参考，不构成任何投注建议
+    </div>
     <div class="prediction-result" id="predResult">
       <div class="result-model-name" id="resModelName"></div>
-      <div class="result-winner" id="resWinner"></div>
-      <div class="result-probs" id="resProbs"></div>
-      <div class="result-analysis" id="resAnalysis"></div>
-      <div class="result-key-factor" id="resKeyFactor"></div>
-      <div class="all-results" id="allResultsWrap">
-        <div class="all-results-title">各模型预测详情</div>
-        <div id="allResultsRows"></div>
-        <div class="consensus" id="consensusText"></div>
+      <div id="predLoading" style="display:none;text-align:center;padding:12px 0;color:var(--muted);font-size:0.82rem"></div>
+      <div id="predMainResult">
+        <div class="result-winner" id="resWinner"></div>
+        <div class="result-score-pred" id="resScorePred"></div>
+        <div class="result-probs" id="resProbs"></div>
+        <div class="result-analysis" id="resAnalysis"></div>
+        <div class="result-key-factor" id="resKeyFactor"></div>
+        <div class="result-factors" id="resFactors"></div>
       </div>
     </div>
+    </div><!-- /predSection -->
   </div>
 </div>
 <script>
-var currentDate = new Date();
+
+// 球队/国家/联赛中文翻译表（基于维基百科）
+var TEAM_CN = {
+  // ===== 中超球队 =====
+  "Beijing Guoan":"北京国安","Shandong Taishan":"山东泰山","Shanghai Port":"上海港",
+  "Shanghai Shenhua":"上海申花","Guangzhou FC":"广州FC","Wuhan Three Towns":"武汉三镇",
+  "Chengdu Rongcheng":"成都蓉城","Henan Songshan Longmen":"河南嵩山龙门",
+  "Tianjin Jinmen Tiger":"天津津门虎","Dalian Pro":"大连人","Changchun Yatai":"长春亚泰",
+  "Shenzhen Xinpengcheng":"深圳新鹏城","Zhejiang Professional FC":"浙江队",
+  "Qingdao Hainiu":"青岛海牛","Qingdao West Coast":"青岛西海岸","Liaoning":"辽宁铁银",
+  "Chongqing Tonglianglong":"重庆铜梁龙",
+
+  // ===== 日本J联赛 =====
+  "Kashima Antlers":"鹿岛鹿角","Kashiwa Reysol":"柏太阳神","Kyoto Sanga":"京都不死鸟",
+  "Sanfrecce Hiroshima":"广岛三箭","Vissel Kobe":"神户胜利船","Machida Zelvia":"町田泽维亚",
+  "Kawasaki Frontale":"川崎前锋","Gamba Osaka":"大阪钢巴","Cerezo Osaka":"大阪樱花",
+  "FC Tokyo":"东京FC","Avispa Fukuoka":"福冈黄蜂","Nagoya Grampus":"名古屋鲸鱼",
+  "Tokyo Verdy 1969":"东京绿茵","Mito Hollyhock":"水户蜀葵","V-Varen Nagasaki":"长崎航海",
+  "JEF United Ichihara-Chiba":"千叶市原联合","Urawa Red Diamonds":"浦和红钻",
+
+  // ===== 巴西球队 =====
+  "Flamengo":"弗拉门戈","Botafogo":"博塔弗戈","Bahia":"巴伊亚","Grêmio":"格雷米奥",
+  "Santos":"桑托斯","Corinthians":"科林蒂安","Coritiba":"科里蒂巴","Vitória":"维多利亚",
+  "Mirassol":"米拉索","Athletico-PR":"巴拉纳竞技","Atlético Goianiense":"戈亚尼竞技",
+  "Fortaleza":"弗塔莱萨","Sport":"体育俱乐部","Floresta":"弗洛雷斯塔",
+  "Caxias do Sul":"卡西亚斯","Náutico":"瑙提科","Botafogo PB":"博塔弗戈PB",
+  "Avaí":"阿瓦伊","Itabaiana":"伊塔巴亚纳","Volta Redonda":"沃尔塔雷东达",
+  "Maringá":"马林加","Criciúma":"克里休马","Confiança":"康菲安萨",
+  "Goiás":"戈亚斯","Ituano":"伊图亚诺",
+
+  // ===== 阿根廷球队 =====
+  "Belgrano (Córdoba)":"贝尔格拉诺","Godoy Cruz Antonio Tomba":"戈多伊克鲁斯",
+  "Lanús":"拉努斯","Instituto (Córdoba)":"科尔多瓦学院","Colón (Santa Fe)":"圣菲科隆",
+  "All Boys":"全男孩","Argentino (Rosario)":"罗萨里奥阿根廷诺",
+  "Almirante Brown":"布朗将军","Acassuso":"阿卡苏索","Agropecuario":"农牧队",
+  "Central Córdoba (Rosario)":"罗萨里奥中央科尔多瓦",
+  "Colegiales":"科莱吉亚莱斯","Defensores de Belgrano":"贝尔格拉诺卫士",
+  "Deportivo Armenio":"亚美尼亚竞技","Deportivo Español":"西班牙竞技",
+  "Deportivo Laferrere":"拉费雷雷竞技","Deportivo Madryn":"马德林竞技",
+  "Deportivo Merlo":"梅洛竞技","Deportivo Paraguayo":"巴拉圭竞技",
+  "Dock Sud":"南码头","El Porvenir":"前途","Estrella del Sur":"南方之星",
+  "Estudiantes (Buenos Aires)":"布宜诺斯艾利斯学生",
+  "Gimnasia y Esgrima (Jujuy)":"胡胡伊体操击剑",
+  "Leones de Rosario":"罗萨里奥雄狮",
+  "Los Andes":"安第斯","Luján":"卢汉","Mercedes":"梅塞德斯",
+  "Muñiz":"穆尼斯","Puerto Nuevo":"新港","Real Pilar":"皮拉尔皇家",
+  "San Telmo":"圣特尔莫","UAI Urquiza":"乌尔基萨UAI",
+  "Cambaceres":"坎巴塞雷斯","Claypole":"克莱波尔",
+  "Central Ballester":"中央巴列斯特","Centro Español":"西班牙中心",
+  "Brown (Adrogué)":"布朗（阿德罗格）","El Porvenir":"前途队",
+
+  // ===== 乌拉圭球队 =====
+  "Danubio":"多瑙河","Defensor Sporting":"捍卫者体育","Progreso":"普格雷素",
+  "Racing (Montevideo)":"蒙特维多竞赛队",
+
+  // ===== 智利球队 =====
+  "Colo Colo":"科洛科洛","La Serena":"拉塞雷纳","Universidad de Chile":"智利大学",
+  "Deportes Concepcion":"康塞普西翁竞技",
+
+  // ===== 秘鲁球队 =====
+  "Universitario":"大学生队","Sport Boys":"体育男孩","Sport Huancayo":"万卡约体育",
+  "Cusco FC":"库斯科FC","Comerciantes Unidos":"联合商人","Deportivo Garcilaso":"加西拉索竞技",
+  "Deportivo Cuenca":"昆卡竞技",
+
+  // ===== 厄瓜多尔球队 =====
+  "Liga de Quito":"基多体育联盟","Delfín":"海豚","Libertad (Ecuador)":"自由（厄瓜多尔）",
+  "Orense":"奥伦塞","Manta F.C.":"曼塔FC",
+
+  // ===== 玻利维亚球队 =====
+  "Always Ready":"永远准备","Independiente Petrolero":"石油独立",
+  "Real Tomayapo":"托马亚波皇家","Real Oruro":"奥鲁罗皇家",
+
+  // ===== 委内瑞拉球队 =====
+  "Deportivo La Guaira":"拉瓜伊拉竞技","Academia Puerto Cabello":"卡韦略港学院",
+  "Universidad Central":"中央大学","Portuguesa":"葡萄牙人",
+
+  // ===== 危地马拉球队 =====
+  "Comunicaciones":"通讯队",
+
+  // ===== 巴拉圭球队 =====
+  "Juan Pablo II":"约翰保罗二世","GV San José":"圣何塞GV",
+
+  // ===== 墨西哥球队 =====
+  "Tigres UANL":"猛虎队","Toluca":"托卢卡","Tepatitlán FC":"特帕蒂特兰FC",
+  "Club Jaiba Brava":"卡门港队","FC Naples":"那不勒斯FC（美国）",
+
+  // ===== 欧洲俱乐部 =====
+  "Paris Saint-Germain":"巴黎圣日耳曼","Arsenal":"阿森纳",
+  "Athletic":"毕尔巴鄂竞技","Sporting Gijón":"希洪竞技",
+  "Albacete":"阿尔瓦塞特","Granada":"格拉纳达","Ceuta":"休达",
+  "Real Sociedad II":"皇家社会B队","Cultural Leonesa":"莱昂文化",
+  "Lugano":"卢加诺",
+
+  // ===== 瑞典联赛 =====
+  "Malmö FF":"马尔默","GAIS":"加尔斯","AIK":"AIK索尔纳",
+  "IK Sirius":"天狼星","Kalmar FF":"卡尔马","Halmstads BK":"哈尔姆斯塔德",
+
+  // ===== 挪威联赛 =====
+  "Molde":"莫尔德","Sandefjord":"桑德福德","AV Alta FC":"阿尔塔FC",
+
+  // ===== 荷兰联赛 =====
+  "ADO '20":"ADO'20","DVS'33":"DVS'33","Excelsior Maassluis":"马斯鲁伊斯埃克塞尔西奥",
+  "FC Rijnvogels":"莱茵福格尔斯FC","IJsselmeervogels":"艾瑟尔梅尔福格尔斯",
+  "Lisse":"利塞","Sparta Nijerk":"奈尔克斯巴达","VVSB":"VVSB","ADT":"ADT","ABB":"ABB",
+
+  // ===== 美国联赛 =====
+  "Charleston Battery":"查尔斯顿炮台","Detroit City FC":"底特律城FC",
+  "Hartford Athletic":"哈特福德体育","Indy Eleven":"印城十一人",
+  "Loudoun United FC":"劳登联FC","Louisville City FC":"路易维尔城FC",
+  "Miami FC":"迈阿密FC","Pittsburgh Riverhounds":"匹兹堡河犬",
+  "Rhode Island FC":"罗得岛FC","Tampa Bay Rowdies":"坦帕湾暴徒",
+  "Colorado Springs Switchbacks FC":"科罗拉多泉急弯FC",
+  "El Paso Locomotive FC":"艾尔帕索火车头FC",
+  "Las Vegas Lights FC":"拉斯维加斯光芒FC",
+  "Monterey Bay":"蒙特雷湾FC","New Mexico United":"新墨西哥联",
+  "Oakland Roots":"奥克兰根源","Phoenix Rising FC":"菲尼克斯展翅FC",
+  "Sacramento Republic FC":"萨克拉门托共和FC","FC Tulsa":"塔尔萨FC",
+  "Athletic Club Boise":"博伊西竞技俱乐部","Boston Legacy FC":"波士顿传奇FC",
+  "Carolina Ascent FC":"卡罗莱纳腾飞FC","Chattanooga Red Wolves":"查塔努加红狼",
+  "Charlotte Independence":"夏洛特独立","Fort Wayne":"韦恩堡",
+  "Lexington":"莱克星顿","Lexington SC":"莱克星顿SC",
+  "New York Cosmos":"纽约宇宙","Richmond Kickers":"里士满踢球者",
+  "Spokane Velocity FC":"斯波坎速度FC","Union Omaha":"奥马哈联",
+  "Portland Hearts of Pine":"波特兰松心","Sarasota Paradise":"萨拉索塔天堂",
+
+  // ===== 女子球队 =====
+  "Kansas City Current":"堪萨斯城现在时（女）","Portland Thorns FC":"波特兰荆棘FC（女）",
+  "Seattle Reign FC":"西雅图统治FC（女）","Utah Royals":"犹他皇家（女）",
+  "Washington Spirit":"华盛顿精神（女）","Vancouver Rise FC":"温哥华崛起FC（女）",
+  "Montreal Roses FC":"蒙特利尔玫瑰FC（女）",
+
+  // ===== 南非球队 =====
+  "Cape Town City":"开普敦城","Magesi FC":"马格西FC",
+
+  // ===== 津巴布韦 =====
+  "Zimbabwe":"津巴布韦",
+
+  // ===== 国家队 =====
+  "Australia":"澳大利亚","Ecuador":"厄瓜多尔","India":"印度","Jamaica":"牙买加",
+  "Mexico":"墨西哥","Nigeria":"尼日利亚","Saudi Arabia":"沙特阿拉伯",
+  "Scotland":"苏格兰","South Korea":"韩国","Trinidad and Tobago":"特立尼达和多巴哥",
+  "Curacao":"库拉索","China":"中国","Japan":"日本","Iran":"伊朗","Iraq":"伊拉克",
+  "Qatar":"卡塔尔","UAE":"阿联酋","France":"法国","Germany":"德国",
+  "England":"英格兰","Spain":"西班牙","Italy":"意大利","Portugal":"葡萄牙",
+  "Netherlands":"荷兰","Belgium":"比利时","Argentina":"阿根廷","Brazil":"巴西",
+  "Uruguay":"乌拉圭","Colombia":"哥伦比亚","USA":"美国","Canada":"加拿大",
+  "Morocco":"摩洛哥","Senegal":"塞内加尔","Egypt":"埃及",
+  "Sweden":"瑞典","Denmark":"丹麦","Norway":"挪威","Switzerland":"瑞士",
+  "Croatia":"克罗地亚","Poland":"波兰","Ukraine":"乌克兰","Turkey":"土耳其",
+  "Czech Republic":"捷克","Hungary":"匈牙利","Romania":"罗马尼亚",
+  "Wales":"威尔士","Ireland":"爱尔兰","Greece":"希腊","Serbia":"塞尔维亚",
+  "Austria":"奥地利","Finland":"芬兰","Iceland":"冰岛","Chile":"智利",
+  "Peru":"秘鲁","Venezuela":"委内瑞拉","Paraguay":"巴拉圭","Bolivia":"玻利维亚",
+  "Costa Rica":"哥斯达黎加","Panama":"巴拿马","Honduras":"洪都拉斯",
+  "El Salvador":"萨尔瓦多","Guatemala":"危地马拉","New Zealand":"新西兰",
+  "North Korea":"朝鲜","Bahrain":"巴林","Kuwait":"科威特","Oman":"阿曼",
+  "Jordan":"约旦","Syria":"叙利亚","Palestine":"巴勒斯坦",
+  "Uzbekistan":"乌兹别克斯坦","Thailand":"泰国","Vietnam":"越南",
+  "Indonesia":"印度尼西亚","Malaysia":"马来西亚","Philippines":"菲律宾",
+  "Hong Kong":"香港","Chinese Taipei":"中国台北",
+
+
+  // ===== 西甲/西班牙 =====
+  "Real Madrid":"皇家马德里","Barcelona":"巴塞罗那","Atlético Madrid":"马德里竞技",
+  "Athletic Club":"毕尔巴鄂竞技","Real Sociedad":"皇家社会","Villarreal":"比利亚雷亚尔",
+  "Sevilla":"塞维利亚","Betis":"贝蒂斯","Real Betis":"皇家贝蒂斯",
+  "Valencia":"瓦伦西亚","Osasuna":"奥萨苏纳","Celta Vigo":"塞尔塔",
+  "Getafe":"赫塔费","Espanyol":"西班牙人","Rayo Vallecano":"拉约巴列卡诺",
+  "Mallorca":"马洛卡","Girona":"赫罗纳","Las Palmas":"拉斯帕尔马斯",
+  "Leganés":"莱加内斯","Valladolid":"巴利亚多利德","Real Valladolid":"皇家巴利亚多利德",
+  "Alavés":"阿拉维斯","Deportivo Alavés":"阿拉维斯",
+  "Almería":"阿尔梅里亚","Cádiz":"加的斯","Deportivo La Coruña":"拉科鲁尼亚",
+  "Zaragoza":"萨拉戈萨","Real Zaragoza":"皇家萨拉戈萨",
+  "Eibar":"埃瓦尔","Burgos":"布尔戈斯","Huesca":"韦斯卡",
+  "Levante":"莱万特","CD Tenerife":"特内里费","Mirandés":"米兰德斯",
+  "Castellón":"卡斯特利翁","Córdoba":"科尔多瓦","Málaga":"马拉加",
+  "Granada":"格拉纳达","Sporting Gijón":"希洪竞技",
+  "Dux Logroño":"杜克斯洛格罗尼奥","FC Andorra":"安道尔FC",
+  "FC Badalona":"巴达洛纳FC","Albion FC":"阿尔比恩FC",
+  "Madrid CFF":"马德里CFF（女）","Alhama":"阿尔阿马（女）",
+
+  // ===== 英超/英格兰 =====
+  "Manchester City":"曼彻斯特城","Manchester United":"曼彻斯特联",
+  "Liverpool":"利物浦","Chelsea":"切尔西","Arsenal":"阿森纳",
+  "Tottenham Hotspur":"托特纳姆热刺","Newcastle United":"纽卡斯尔联",
+  "Brighton & Hove Albion":"布莱顿","Brighton":"布莱顿","Aston Villa":"阿斯顿维拉",
+  "West Ham United":"西汉姆联","Crystal Palace":"水晶宫","Brentford":"布伦特福德",
+  "Fulham":"富勒姆","Wolverhampton":"狼队","Wolves":"狼队",
+  "Everton":"埃弗顿","Leicester City":"莱斯特城","Nottingham Forest":"诺丁汉森林",
+  "Bournemouth":"伯恩茅斯","AFC Bournemouth":"伯恩茅斯",
+  "Southampton":"南安普顿","Ipswich Town":"伊普斯维奇",
+  "Leeds United":"利兹联","Sheffield United":"谢菲尔德联",
+  "Burnley":"伯恩利","Luton Town":"卢顿",
+
+  // ===== 德甲/德国 =====
+  "Bayern Munich":"拜仁慕尼黑","Borussia Dortmund":"多特蒙德","BVB":"多特蒙德",
+  "RB Leipzig":"莱比锡红牛","Bayer Leverkusen":"勒沃库森",
+  "Eintracht Frankfurt":"法兰克福","Wolfsburg":"沃尔夫斯堡","VfL Wolfsburg":"沃尔夫斯堡",
+  "Borussia Mönchengladbach":"门兴格拉德巴赫","Freiburg":"弗莱堡","SC Freiburg":"弗莱堡",
+  "Stuttgart":"斯图加特","VfB Stuttgart":"斯图加特",
+  "Hoffenheim":"霍芬海姆","TSG Hoffenheim":"霍芬海姆",
+  "Mainz":"美因茨","FSV Mainz 05":"美因茨","Augsburg":"奥格斯堡","FC Augsburg":"奥格斯堡",
+  "Union Berlin":"柏林联合","1. FC Union Berlin":"柏林联合",
+  "Werder Bremen":"不来梅","SV Werder Bremen":"不来梅",
+  "Cologne":"科隆","1. FC Köln":"科隆","Darmstadt":"达姆施塔特",
+
+  // ===== 意甲/意大利 =====
+  "Juventus":"尤文图斯","Inter Milan":"国际米兰","Inter":"国际米兰",
+  "AC Milan":"AC米兰","Milan":"AC米兰","Napoli":"那不勒斯","Roma":"罗马","AS Roma":"罗马",
+  "Lazio":"拉齐奥","Atalanta":"亚特兰大","Fiorentina":"佛罗伦萨",
+  "Bologna":"博洛尼亚","Torino":"都灵","Udinese":"乌迪内斯",
+  "Sassuolo":"萨索洛","Monza":"蒙扎","Lecce":"莱切","Empoli":"恩波利",
+  "Frosinone":"弗罗西诺内","Salernitana":"萨勒尼塔纳","Verona":"维罗纳",
+  "Hellas Verona":"赫拉斯维罗纳","Genoa":"热那亚","Cagliari":"卡利亚里",
+
+  // ===== 法甲/法国 =====
+  "Paris Saint-Germain":"巴黎圣日耳曼","PSG":"巴黎圣日耳曼",
+  "Marseille":"马赛","Olympique de Marseille":"马赛",
+  "Lyon":"里昂","Olympique Lyonnais":"里昂",
+  "Monaco":"摩纳哥","AS Monaco":"摩纳哥",
+  "Lille":"里尔","Lens":"朗斯","RC Lens":"朗斯",
+  "Nice":"尼斯","OGC Nice":"尼斯","Rennes":"雷恩","Stade Rennais":"雷恩",
+  "Montpellier":"蒙彼利埃","Strasbourg":"斯特拉斯堡","Nantes":"南特",
+  "Toulouse":"图卢兹","Brest":"布雷斯特","Stade Brestois":"布雷斯特",
+  "Reims":"兰斯","Stade de Reims":"兰斯","Le Havre":"勒阿弗尔","Metz":"梅斯",
+  "Lorient":"洛里昂","Clermont":"克莱蒙费朗",
+
+  // ===== 荷甲/荷兰 =====
+  "Ajax":"阿贾克斯","PSV":"埃因霍温","PSV Eindhoven":"埃因霍温",
+  "Feyenoord":"费耶诺德","AZ":"AZ阿尔克马尔","AZ Alkmaar":"AZ阿尔克马尔",
+  "Utrecht":"乌得勒支","FC Utrecht":"乌得勒支","Twente":"特温特","FC Twente":"特温特",
+  "Heerenveen":"海伦芬","SC Heerenveen":"海伦芬","Groningen":"格罗宁根","FC Groningen":"格罗宁根",
+  "Vitesse":"费特斯","NEC Nijmegen":"奈梅亨","Go Ahead Eagles":"前进鹰",
+  "Sparta Rotterdam":"鹿特丹斯巴达","Almere City":"阿尔梅勒城",
+
+  // ===== 比利时/荷兰 =====
+  "Club Brugge":"布鲁日","Anderlecht":"安德莱赫特","Union SG":"根特联",
+  "Gent":"根特","KAA Gent":"根特","Racing Genk":"根克","KRC Genk":"根克",
+  "Standard Liège":"列日标准","Antwerp":"安特卫普","Royal Antwerp":"皇家安特卫普",
+  "Westerlo":"韦斯特洛","OH Leuven":"鲁汶","Cercle Brugge":"布鲁日圆",
+
+  // ===== 葡萄牙 =====
+  "Benfica":"本菲卡","SL Benfica":"本菲卡","Porto":"波尔图","FC Porto":"波尔图",
+  "Sporting CP":"斯波廷","Braga":"布拉加","SC Braga":"布拉加",
+  "Vitória SC":"维多利亚SC","Famalicão":"法马利康",
+
+  // ===== 苏格兰 =====
+  "Celtic":"凯尔特人","Rangers":"流浪者",
+
+  // ===== 欧冠其他 =====
+  "Real Madrid CF":"皇家马德里",
+
+  // ===== 瑞典 =====
+  "BK Häcken":"哈肯","Hammarby IF":"哈马比","Djurgården":"尤加登",
+  "IF Brommapojkarna":"布罗姆波伊卡纳","IFK Göteborg":"哥德堡","Västerås SK":"韦斯特罗斯",
+  "Degerfors IF":"德格福斯","Mjällby AIF":"米亚尔比",
+
+  // ===== 阿根廷（补全） =====
+  "Racing Club":"竞赛队","Independiente":"独立队","River Plate":"河床",
+  "Boca Juniors":"博卡青年","San Lorenzo":"圣洛伦索","Vélez Sársfield":"委拉斯科",
+  "Talleres":"塔列雷斯","Huracán":"乌拉坎","Patronato":"帕特罗纳托",
+  "Quilmes":"基尔梅斯","Defensa y Justicia":"防卫正义","Platense":"普拉滕塞",
+  "Almagro":"阿尔玛格罗","Atlanta":"亚特兰大（阿根廷）","Chacarita Juniors":"恰卡里塔青年",
+  "Chaco For Ever":"查科永远","Arsenal Sarandi":"萨兰迪阿森纳",
+  "Atletico Rafaela":"拉法埃拉竞技","Deportivo Morón":"莫隆竞技",
+  "Deportivo Maipú":"迈普竞技","San Martín (San Juan)":"圣马丁（圣胡安）",
+  "San Martín (Tucumán)":"圣马丁（图库曼）","San Martín (Burzaco)":"圣马丁（布尔萨科）",
+  "San Miguel":"圣米格尔","Temperley":"坦帕莱","Tristán Suárez":"特里斯坦苏亚雷斯",
+  "Excursionistas":"远足队","JJ Urquiza":"JJ乌尔基萨","Victoriano Arenas":"维多利亚诺阿雷纳斯",
+  "Flandria":"弗兰德里亚","General Lamadrid":"拉马德里将军","Güemes":"圭梅斯",
+  "Gimnasia y Tiro (Salta)":"萨尔塔体操射击","Juventud":"青年队",
+  "Juventud Unida":"青年联合","Leandro N. Alem":"莱安德罗·阿莱姆",
+  "Liniers":"利尼尔斯","Ciudad de Bolívar":"玻利瓦尔城","Deportivo Madryn":"马德林竞技",
+  "Camioneros":"卡车司机","Central Norte":"中央北方",
+  "Mitre (Santiago del Estero)":"米特雷（圣地亚哥德尔埃斯特罗）",
+  "Yupanqui":"尤潘基","Sportivo Italiano":"意大利运动",
+  "Villa Dálmine":"达尔米内别墅","Villa San Carlos":"圣卡洛斯别墅",
+  "Midland":"米德兰","Defensores Unidos":"联合卫士",
+
+  // ===== 巴西（补全） =====
+  "Palmeiras":"帕尔梅拉斯","São Paulo":"圣保罗","Fluminense":"弗鲁米嫩塞",
+  "Internacional":"国际体育","Cruzeiro":"克鲁塞罗",
+  "Atlético-MG":"米内罗竞技","Vasco da Gama":"瓦斯科达伽马",
+  "Athletico-PR":"巴拉纳竞技","Red Bull Bragantino":"布拉干蒂诺",
+  "Botafogo":"博塔弗戈","Ceará":"塞阿拉","CRB":"CRB",
+  "Maranhao":"马拉尼昂","Novorizontino":"诺沃里宗蒂诺",
+  "Operário PR":"奥佩拉里奥PR","Paysandu":"帕伊萨杜",
+  "Remo":"雷莫","Santa Cruz":"圣克鲁斯","São Bernardo":"圣贝纳多",
+  "Chapecoense":"沙佩科恩塞","Vila Nova":"新城","Amazonas":"亚马逊",
+  "Anápolis":"阿纳波利斯","Cuiabá":"库亚巴","Ferroviária":"铁路队",
+  "Figueirense":"菲盖伦塞","Inter de Limeira":"利梅拉国际",
+  "Londrina":"朗德里纳","Ypiranga":"伊皮兰加","Guarani":"瓜拉尼",
+
+  // ===== 智利（补全） =====
+  "Universidad Católica":"天主教大学","Audax Italiano":"奥达克斯意大利",
+  "Everton CD":"埃弗顿CD","Coquimbo Unido":"科金博联合","O'Higgins":"奥希金斯",
+  "Deportes Limache":"利马切竞技","Palestino":"巴勒斯坦人","Huachipato":"瓦奇帕托",
+
+  // ===== 乌拉圭（补全） =====
+  "Nacional":"国民队","Peñarol":"佩纳罗尔",
+  "Montevideo City Torque":"蒙特维多城转矩","Montevideo Wanderers":"蒙特维多流浪者",
+  "Deportivo Maldonado":"马尔多纳多竞技",
+
+  // ===== 秘鲁（补全） =====
+  "Alianza Lima":"利马联盟","Sporting Cristal":"水晶体育","Melgar":"梅尔加尔",
+  "Alianza Atlético":"阿特莱蒂科联盟","Cienciano del Cusco":"库斯科塞恩西亚诺",
+  "Los Chankas":"查卡斯","UTC":"UTC","FC Cajamarca":"卡哈马卡FC",
+
+  // ===== 厄瓜多尔（补全） =====
+  "Barcelona SC":"巴塞罗那SC","Emelec":"埃梅莱克",
+  "Independiente del Valle":"独立山谷","LDU Quito":"基多大学体育联盟",
+  "Aucas":"奥卡斯","Guayaquil City FC":"瓜亚基尔城FC",
+  "Mushuc Runa":"穆舒克鲁纳","Universidad Católica (Quito)":"基多天主教大学",
+
+  // ===== 玻利维亚（补全） =====
+  "Bolívar":"玻利瓦尔","The Strongest":"最强队","Blooming":"布洛明",
+  "Oriente Petrolero":"石油东方","Nacional Potosí":"波托西国民",
+  "Real Potosí":"皇家波托西","Independiente Petrolero":"石油独立",
+
+  // ===== 委内瑞拉（补全） =====
+  "Carabobo":"卡拉沃沃","Metropolitanos FC":"都市FC",
+  "Deportivo Táchira":"塔奇拉竞技","Estudiantes de Mérida":"梅里达学生",
+
+  // ===== 日本（补全） =====
+  "Yokohama F. Marinos":"横滨水手","Shimizu S-Pulse":"清水心跳",
+  "Fagiano Okayama":"冈山雉鸡",
+
+  // ===== 中国（补全） =====
+  "Dalian Yingbo":"大连英博","Yunnan Yukun":"云南玉昆","China PR U20":"中国U20",
+
+  // ===== 国家队（补全） =====
+  "Germany":"德国","Brazil":"巴西","Japan":"日本","United States":"美国",
+  "Singapore":"新加坡","Mongolia":"蒙古","Kosovo":"科索沃",
+  "Tunisia U20":"突尼斯U20","Saudi Arabia U23":"沙特U23",
+  "Congo DR U20":"刚果DR U20","Cape Verde":"佛得角","Czechia":"捷克",
+  "Finland":"芬兰","Iceland":"冰岛","Ukraine":"乌克兰","Poland":"波兰",
+  "Switzerland":"瑞士","Serbia":"塞尔维亚","Panama":"巴拿马","Jordan":"约旦",
+  "Senegal":"塞内加尔",
+
+  // ===== 女子联赛（补全） =====
+  "Angel City FC":"天使城FC（女）","Chicago Stars FC":"芝加哥星FC（女）",
+  "Gotham FC":"哥谭FC（女）","Houston Dash":"休斯顿短跑（女）",
+  "North Carolina Courage":"北卡勇气（女）","San Diego Wave FC":"圣地亚哥浪潮FC（女）",
+  "AFC Toronto":"多伦多AFC（女）","Calgary Wild FC":"卡尔加里荒野FC（女）",
+  "Sporting JAX":"斯波廷杰克逊维尔（女）","Brooklyn FC":"布鲁克林FC（女）",
+  "Vancouver Rise FC":"温哥华崛起FC（女）",
+
+  // ===== 非洲（补全） =====
+  "AFC Leopards":"豹队","KCB":"肯尼亚商业银行队","Bidco United":"比德科联",
+  "Bandari Mtwara":"班达里姆特瓦拉","Gor Mahia":"格尔马希亚","Tusker FC":"塔斯克FC",
+  "Mara Sugar":"马拉糖业","Mathare United":"马萨雷联","Posta Rangers":"邮政游骑兵",
+  "Sofapaka":"索法帕卡","Ulinzi Stars":"乌林兹星","Nairobi United":"内罗毕联",
+  "Kakamega Homeboyz":"卡卡梅加","Kenya Police":"肯尼亚警察","Murang'a Seal FC":"穆兰加海豹FC",
+  "Kariobangi Sharks":"卡里奥班吉鲨鱼","Shabana":"沙巴纳",
+  "APS Bomet":"博梅特APS","GOR Mahia":"格尔马希亚",
+
+  // ===== 联赛名 =====
+  "International":"国际赛","FIFA World Cup":"世界杯",
+  "AFC Asian Cup":"亚洲杯","UEFA Champions League":"欧冠",
+  "UEFA Europa League":"欧联杯","English Premier League":"英超",
+  "La Liga":"西甲","Bundesliga":"德甲","Serie A":"意甲","Ligue 1":"法甲",
+  "Chinese Super League":"中超","J1 League":"J1联赛","J2 League":"J2联赛",
+  "Brasileirao":"巴西甲","MLS":"美职联","USL Championship":"美国足球冠军联赛",
+  "USL Super League":"美国超级联赛（女）","NWSL":"全国女子足球联赛",
+  "Allsvenskan":"瑞典超级联赛","Eliteserien":"挪威超级联赛",
+  "Eredivisie":"荷甲","Liga MX":"墨西哥甲级联赛"
+};
+
+// 联赛 ID（uid里l:XXX）→ 中文名映射表
+// 同一联赛多个ID统一映射到相同中文名，buildLeagueFilter会自动合并
+var LEAGUE_CN = {
+  "l:775":  "欧冠",
+  "l:5699": "欧联杯",
+  "l:23633":"欧会杯",
+  "l:8376": "中超",
+  "l:630":  "巴西甲",
+  "l:4007": "巴西乙",
+  "l:8301": "NWSL女足联赛",
+  "l:3922": "国际友谊赛",
+  "l:3921": "国际友谊赛",   // 合并：与3922同为友谊赛
+  "l:750":  "南美解放者杯",
+  "l:20798":"南美解放者杯", // 合并：与750同为解放者杯
+  "l:670":  "阿根廷甲",
+  "l:3949": "阿根廷甲",    // 合并：与670同为阿根廷甲
+  "l:660":  "秘鲁甲",
+  "l:640":  "智利甲",
+  "l:620":  "玻利维亚甲",
+  "l:680":  "乌拉圭甲",
+  "l:3945": "瑞典超级联赛",
+  "l:3960": "挪威超级联赛",
+  "l:3903": "荷兰甲",
+  "l:3904": "荷兰业余联赛",
+  "l:19915":"美国USL联赛",
+  "l:4002": "墨西哥甲",
+  "l:4003": "墨西哥升降级",
+  "l:11088":"墨西哥女甲",
+  "l:3932": "墨西哥升降级",// 合并：与4003同类
+  "l:8107": "南非超级联赛",
+  "l:19911":"南非超级联赛",// 合并：升降级附加赛归入南非超级联赛
+  "l:23286":"美国业余联赛",
+  // slug兜底
+  "2026-chinese-super-league":       "中超",
+  "2026-brasileiro-serie-a":         "巴西甲",
+  "2026-brasileiro-serie-b":         "巴西乙",
+  "2026-international-friendly":     "国际友谊赛",
+  "2026-allsvenskan":                "瑞典超级联赛",
+  "2026-eliteserien":                "挪威超级联赛",
+  "2026-bolivian-liga-profesional":  "玻利维亚甲",
+  "2026-primera-division-de-chile":  "智利甲",
+  "2025-26-south-african-premiership-promotionrelegation-playoffs": "南非超级联赛"
+};
+
+function cnName(name) {
+  if (!name) return name;
+  if (TEAM_CN[name]) return TEAM_CN[name];
+  // 模糊匹配（处理带括号等变体）
+  for (var k in TEAM_CN) {
+    if (name === k) return TEAM_CN[k];
+    if (name.indexOf(k) >= 0 && k.length > 4) return TEAM_CN[k];
+  }
+  return name;
+}
+
+function getChinaToday() {
+  var now = new Date();
+  // 返回一个 Date 对象，其 UTC 时间 = 中国时间的今天 00:00
+  var chinaMs = now.getTime() + 8 * 3600000;
+  var d = new Date(chinaMs);
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+}
+var currentDate = getChinaToday();
 var allMatches = [];
 var currentLeague = 'ALL';
-var selectedModel = 'poisson';
+var selectedModel = 'luopan';
 var currentMatch = null;
 
-function fmt(d) { return d.toISOString().slice(0,10); }
-function fmtDisplay(d) {
-  var today = new Date();
-  var diff = Math.round((d - new Date(today.toDateString())) / 86400000);
-  var label = diff===0?' (今天)':diff===1?' (明天)':diff===-1?' (昨天)':'';
-  return d.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'short'})+label;
+function fmt(d) {
+  // d 已经是"中国日期的 UTC 零点"，直接取 ISO 日期即可
+  return d.toISOString().slice(0, 10);
 }
+function fmtDisplay(d) {
+  var y = d.getUTCFullYear();
+  var mo = d.getUTCMonth();
+  var day = d.getUTCDate();
+  var wd = ['周日','周一','周二','周三','周四','周五','周六'][new Date(y, mo, day).getDay()];
+  return y + '年' + (mo + 1) + '月' + day + '日 ' + wd;
+}
+function goToday() { currentDate = getChinaToday(); loadMatches(); }
 function changeDate(delta) {
-  currentDate = new Date(currentDate);
-  currentDate.setDate(currentDate.getDate()+delta);
+  currentDate = new Date(currentDate.getTime() + delta * 86400000);
   loadMatches();
 }
+function updateTodayBtn() {
+  var btn = document.getElementById('todayBtn');
+  if (!btn) return;
+  var today = getChinaToday();
+  var isToday = currentDate.getTime() === today.getTime();
+  if (isToday) {
+    btn.textContent = '今天';
+    btn.classList.add('today-btn');
+    btn.disabled = true;
+  } else {
+    btn.textContent = '回今天';
+    btn.classList.remove('today-btn');
+    btn.disabled = false;
+  }
+}
 
-async function loadMatches() {
+var autoRefreshTimer = null;
+
+function parseEvents(events) {
+  return events.map(function(ev) {
+    var comp = ev.competitions && ev.competitions[0];
+    var comps = (comp && comp.competitors) || [];
+    var home = comps.find(function(c){return c.homeAway==='home';}) || comps[0] || {};
+    var away = comps.find(function(c){return c.homeAway==='away';}) || comps[1] || {};
+    var status = (comp && comp.status && comp.status.type && comp.status.type.name) || '';
+    var uidMatch = ev.uid && ev.uid.match(/l:(\d+)/);
+    var leagueIdKey = uidMatch ? 'l:' + uidMatch[1] : '';
+    var seasonSlug = (ev.season && ev.season.slug) || '';
+    var leagueCN = (leagueIdKey && LEAGUE_CN[leagueIdKey]) ||
+                   (seasonSlug && LEAGUE_CN[seasonSlug]) ||
+                   '国际赛';
+    var homeScore = (home.score !== undefined && home.score !== null) ? parseInt(home.score) : null;
+    var awayScore = (away.score !== undefined && away.score !== null) ? parseInt(away.score) : null;
+    return {
+      id: ev.id,
+      utcDate: ev.date,
+      homeTeam: { name: (home.team&&home.team.displayName)||'主队', shortName: (home.team&&home.team.shortDisplayName)||'' },
+      awayTeam: { name: (away.team&&away.team.displayName)||'客队', shortName: (away.team&&away.team.shortDisplayName)||'' },
+      status: status,
+      homeScore: homeScore,
+      awayScore: awayScore,
+      leagueName: leagueCN,
+      leagueCode: leagueIdKey || seasonSlug || 'INT'
+    };
+  });
+}
+
+function scheduleAutoRefresh() {
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  var hasLive = allMatches.some(function(m){ return getMatchState(m) === 'live'; });
+  if (hasLive) {
+    autoRefreshTimer = setInterval(function(){
+      loadMatches(true); // 静默刷新
+    }, 60000);
+  }
+}
+
+async function loadMatches(silent) {
   document.getElementById('dateDisplay').textContent = fmtDisplay(currentDate);
+  updateTodayBtn();
+  if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
   var area = document.getElementById('matchesArea');
-  area.innerHTML = '<div class="loading-wrap"><div class="spinner"></div><div>正在抓取赛程...</div></div>';
+  if (!silent) {
+    area.innerHTML = '<div class="loading-wrap"><div class="spinner"></div><div>正在抓取赛程...</div></div>';
+  }
   var dateStr = fmt(currentDate).replace(/-/g,'');
+  var cacheKey = 'espn_' + dateStr;
+  var today = getChinaToday();
+  var isToday = currentDate.getTime() === today.getTime();
+
+  // 非今天的过去日期 → 读缓存（缓存5分钟内有效）
+  if (!isToday) {
+    try {
+      var cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        var obj = JSON.parse(cached);
+        if (Date.now() - obj.ts < 5 * 60000) {
+          allMatches = obj.data;
+          buildLeagueFilter();
+          renderMatches();
+          scheduleAutoRefresh();
+          return;
+        }
+      }
+    } catch(e) {}
+  }
+
   var url = 'https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates='+dateStr+'&limit=200';
   try {
     var res = await fetch(url);
     if (!res.ok) throw new Error('HTTP '+res.status);
     var data = await res.json();
-    var events = data.events || [];
-    allMatches = events.map(function(ev) {
-      var comp = ev.competitions && ev.competitions[0];
-      var comps = (comp && comp.competitors) || [];
-      var home = comps.find(function(c){return c.homeAway==='home';}) || comps[0] || {};
-      var away = comps.find(function(c){return c.homeAway==='away';}) || comps[1] || {};
-      var status = (comp && comp.status && comp.status.type && comp.status.type.name) || '';
-      var league = (ev.league && ev.league.name) || 'International';
-      var leagueCode = (ev.league && ev.league.abbreviation) || 'INT';
-      return {
-        id: ev.id,
-        utcDate: ev.date,
-        homeTeam: { name: (home.team&&home.team.displayName)||'主队', shortName: (home.team&&home.team.shortDisplayName)||'' },
-        awayTeam: { name: (away.team&&away.team.displayName)||'客队', shortName: (away.team&&away.team.shortDisplayName)||'' },
-        status: status,
-        leagueName: league,
-        leagueCode: leagueCode
-      };
-    });
+    allMatches = parseEvents(data.events || []);
+    // 过去日期写入缓存
+    if (!isToday) {
+      try { sessionStorage.setItem(cacheKey, JSON.stringify({ts: Date.now(), data: allMatches})); } catch(e) {}
+    }
     buildLeagueFilter();
     renderMatches();
+    scheduleAutoRefresh();
   } catch(e) {
-    area.innerHTML = '<div class="error-box">加载失败：'+e.message+'<br><small>ESPN API 请求出错，请稍后重试</small></div>';
+    if (!silent) {
+      area.innerHTML = '<div class="error-box">加载失败：'+e.message+'<br><small>ESPN API 请求出错，请稍后重试</small></div>';
+    }
   }
 }
 
 function buildLeagueFilter() {
-  var leagueMap = {};
+  var leagueCount = {};
   allMatches.forEach(function(m){
-    var code = m.leagueCode||'INT';
-    if (!leagueMap[code]) leagueMap[code]=m.leagueName||code;
+    var name = m.leagueName || '国际赛';
+    leagueCount[name] = (leagueCount[name] || 0) + 1;
   });
+  var sorted = Object.keys(leagueCount).sort(function(a,b){ return leagueCount[b]-leagueCount[a]; });
   var wrap = document.getElementById('leagueFilter');
-  wrap.innerHTML = '<div class="league-chip active" data-league="ALL" onclick="filterLeague(this)">全部 ('+allMatches.length+')</div>';
-  Object.keys(leagueMap).forEach(function(code){
-    var name = leagueMap[code];
-    var cnt = allMatches.filter(function(m){return m.leagueCode===code;}).length;
+  wrap.innerHTML = '';
+  // 全部按钮
+  var all = document.createElement('div');
+  all.className = 'league-chip active';
+  all.dataset.league = 'ALL';
+  all.textContent = '全部 ('+allMatches.length+')';
+  all.onclick = function(){ filterLeague(this); };
+  wrap.appendChild(all);
+  sorted.forEach(function(name){
+    var cnt = leagueCount[name];
     var chip = document.createElement('div');
-    chip.className='league-chip';
-    chip.dataset.league=code;
-    chip.onclick=function(){filterLeague(this);};
-    chip.textContent=name+' ('+cnt+')';
+    chip.className = 'league-chip';
+    chip.dataset.league = name;
+    chip.textContent = name+' ('+cnt+')';
+    chip.onclick = function(){ filterLeague(this); };
     wrap.appendChild(chip);
   });
-  currentLeague='ALL';
+  currentLeague = 'ALL';
 }
 
 function filterLeague(el) {
-  document.querySelectorAll('.league-chip').forEach(function(c){c.classList.remove('active');});
+  document.querySelectorAll('.league-chip').forEach(function(c){ c.classList.remove('active'); });
   el.classList.add('active');
-  currentLeague=el.dataset.league;
+  currentLeague = el.dataset.league;
+  // 选中后滚动到该标签可见
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   renderMatches();
+}
+
+function scrollLeague() {
+  var wrap = document.getElementById('leagueFilter');
+  wrap.scrollBy({ left: 200, behavior: 'smooth' });
+}
+
+function getMatchState(m) {
+  var st=(m.status||'').toLowerCase();
+  var isLive = st==='status_first_half'||st==='status_second_half'||st==='status_halftime'||st==='status_in_progress'||st.indexOf('first_half')>=0||st.indexOf('second_half')>=0||st.indexOf('in_progress')>=0;
+  var isFinished = st==='status_full_time'||st==='status_final'||st==='status_finished'||st.indexOf('full_time')>=0||st.indexOf('final')>=0||st.indexOf('finished')>=0;
+  if (!isLive && !isFinished && m.utcDate) {
+    // 用北京时间判断：若开球时间已过 90 分钟，视为已结束
+    var kickoff = new Date(m.utcDate);
+    var nowBJ = new Date().getTime() + 8 * 3600000; // 当前北京时间戳
+    var kickoffBJ = kickoff.getTime() + 8 * 3600000;
+    if (!isNaN(kickoffBJ) && nowBJ - kickoffBJ > 90 * 60000) {
+      isFinished = true;
+    }
+  }
+  return isLive ? 'live' : isFinished ? 'finished' : 'upcoming';
+}
+
+function updateStatsBadge(matches) {
+  var live=0,upcoming=0,finished=0;
+  matches.forEach(function(m){
+    var s=getMatchState(m);
+    if(s==='live') live++;
+    else if(s==='finished') finished++;
+    else upcoming++;
+  });
+  var badge = document.getElementById('matchCountBadge');
+  if(badge) badge.textContent = matches.length + ' 场赛事';
+  var bar = document.getElementById('statsBar');
+  if(!bar) return;
+  bar.innerHTML =
+    (live>0?'<div class="stat-item"><span class="stat-dot live"></span><span class="stat-count">'+live+'</span><span class="stat-label">直播中</span></div>':'')+
+    '<div class="stat-item"><span class="stat-dot upcoming"></span><span class="stat-count">'+upcoming+'</span><span class="stat-label">待开赛</span></div>'+
+    '<div class="stat-item"><span class="stat-dot finished"></span><span class="stat-count">'+finished+'</span><span class="stat-label">已结束</span></div>';
 }
 
 function renderMatches() {
   var area = document.getElementById('matchesArea');
-  var matches = currentLeague==='ALL' ? allMatches : allMatches.filter(function(m){return m.leagueCode===currentLeague;});
+  var matches = currentLeague==='ALL' ? allMatches : allMatches.filter(function(m){return (m.leagueName||'国际赛')===currentLeague;});
+  updateStatsBadge(matches);
   if (!matches.length) {
-    area.innerHTML='<div class="empty-wrap"><div style="font-size:2rem;margin-bottom:12px">📭</div><div style="font-size:1rem;color:rgba(0,245,255,0.7)">该日期暂无比赛数据</div></div>';
+    area.innerHTML='<div class="empty-wrap"><div class="empty-icon">📭</div><div class="empty-text">该日期暂无比赛数据</div></div>';
     return;
   }
   matches.sort(function(a,b){return new Date(a.utcDate)-new Date(b.utcDate);});
-  area.innerHTML='<div class="matches-grid" id="matchesGrid"></div>';
-  var grid=document.getElementById('matchesGrid');
-  matches.forEach(function(m){grid.appendChild(buildMatchCard(m));});
+  var live=[], upcoming=[], finished=[];
+  matches.forEach(function(m){
+    var s=getMatchState(m);
+    if(s==='live') live.push(m);
+    else if(s==='finished') finished.push(m);
+    else upcoming.push(m);
+  });
+  area.innerHTML='';
+  function renderGroup(label, list, labelClass) {
+    if(!list.length) return;
+    var lbl=document.createElement('div');
+    lbl.className='section-label '+(labelClass||'');
+    lbl.textContent=label;
+    area.appendChild(lbl);
+    var grid=document.createElement('div');
+    grid.className='matches-grid';
+    list.forEach(function(m){grid.appendChild(buildMatchCard(m));});
+    area.appendChild(grid);
+  }
+  renderGroup('🔴  直播中', live, 'live-label');
+  renderGroup('⏳  待开赛', upcoming, 'upcoming-label');
+  renderGroup('✓  已结束', finished, 'finished-label');
 }
 
 function buildMatchCard(m) {
+  var state = getMatchState(m);
   var card=document.createElement('div');
-  card.className='match-card';
-  card.onclick=function(){openPrediction(m);};
-  var st=(m.status||'').toLowerCase();
-  var vsHtml,timeHtml;
-  if (st.indexOf('in_progress')>=0||st==='in'||st.indexOf('halftime')>=0) {
-    vsHtml='<div class="match-vs live"><span class="match-status-dot"></span>进行中</div>';
-    timeHtml='<div class="match-time" style="color:var(--pink)">🔴 直播中</div>';
-  } else if (st.indexOf('final')>=0||st.indexOf('finished')>=0||st.indexOf('end')>=0) {
-    vsHtml='<div class="match-vs finished">FT</div>';
-    timeHtml='<div class="match-time" style="color:var(--green)">已结束</div>';
+  card.className='match-card' + (state==='live'?' card-live':state==='finished'?' card-finished':'');
+  var hasScore = m.homeScore !== null && m.awayScore !== null;
+  var hn=cnName((m.homeTeam&&m.homeTeam.name)||'主队');
+  var an=cnName((m.awayTeam&&m.awayTeam.name)||'客队');
+  var leagueTxt = cnName(m.leagueName||'国际赛');
+
+  var badgeHtml, scoreHtml, footerRight;
+  if (state==='live') {
+    badgeHtml='<span class="match-status-badge badge-live"><span class="match-status-dot"></span>直播中</span>';
+    var sc = hasScore ? m.homeScore+'  '+m.awayScore : 'VS';
+    scoreHtml='<div class="match-score-area"><div class="score-display score-live">'+sc+'</div></div>';
+    footerRight='';
+  } else if (state==='finished') {
+    badgeHtml='<span class="match-status-badge badge-finished">已结束</span>';
+    if (hasScore) {
+      var cls = m.homeScore>m.awayScore?'score-home-win':m.awayScore>m.homeScore?'score-away-win':'score-draw';
+      scoreHtml='<div class="match-score-area"><div class="score-display '+cls+'">'+m.homeScore+'  -  '+m.awayScore+'</div></div>';
+    } else {
+      scoreHtml='<div class="match-score-area"><div class="score-display score-draw" style="font-size:0.8rem;color:var(--muted)">比分未知</div></div>';
+    }
+    footerRight='<span class="predict-hint" style="color:var(--muted)">查看复盘 ›</span>';
   } else {
     var kickoff=new Date(m.utcDate);
-    var local=isNaN(kickoff.getTime())? '--:--':kickoff.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
-    vsHtml='<div class="match-vs">VS</div>';
-    timeHtml='<div class="match-time">⏰ '+local+'</div>';
+    var local='--:--';
+    if(!isNaN(kickoff.getTime())){
+      // 转换为北京时间（UTC+8）显示
+      var bj=new Date(kickoff.getTime()+8*3600000);
+      local=String(bj.getUTCHours()).padStart(2,'0')+':'+String(bj.getUTCMinutes()).padStart(2,'0');
+    }
+    badgeHtml='<span class="match-status-badge badge-upcoming">'+local+'</span>';
+    scoreHtml='<div class="match-score-area"><div class="score-display vs-text">VS</div></div>';
+    footerRight='<span class="predict-hint">点击预测 ›</span>';
   }
-  var hn=(m.homeTeam&&(m.homeTeam.shortName||m.homeTeam.name))||'主队';
-  var an=(m.awayTeam&&(m.awayTeam.shortName||m.awayTeam.name))||'客队';
+
   card.innerHTML=
-    '<div class="match-league">⚽ '+(m.leagueName||'International')+'</div>'+
-    '<div class="match-teams"><div class="team-name home">'+hn+'</div>'+vsHtml+'<div class="team-name away">'+an+'</div></div>'+
-    timeHtml+'<div class="predict-hint">✨ 点击召唤神谕预测</div>';
+    '<div class="match-header">'+
+      '<span class="match-league-tag">'+leagueTxt+'</span>'+
+      badgeHtml+
+    '</div>'+
+    '<div class="match-teams">'+
+      '<div class="team-side home"><div class="team-name">'+hn+'</div></div>'+
+      scoreHtml+
+      '<div class="team-side away"><div class="team-name">'+an+'</div></div>'+
+    '</div>'+
+    '<div class="match-footer"><span></span>'+footerRight+'</div>';
+
+  card.style.cursor='pointer';
+  if (state==='finished') {
+    card.onclick=function(){openReview(m);};
+  } else {
+    card.onclick=function(){openPrediction(m);};
+  }
   return card;
 }
 
-function openPrediction(m) {
+function openModalBase(m) {
   currentMatch=m;
-  var home=(m.homeTeam&&(m.homeTeam.name||m.homeTeam.shortName))||'主队';
-  var away=(m.awayTeam&&(m.awayTeam.name||m.awayTeam.shortName))||'客队';
+  var home=cnName((m.homeTeam&&m.homeTeam.name)||'主队');
+  var away=cnName((m.awayTeam&&m.awayTeam.name)||'客队');
   document.getElementById('modalTitle').textContent=home+' vs '+away;
-  document.getElementById('modalLeague').textContent=m.leagueName||'International';
+  document.getElementById('modalLeague').textContent=m.leagueName||'';
   document.getElementById('modalHome').textContent=home;
   document.getElementById('modalAway').textContent=away;
   var kickoff=new Date(m.utcDate);
-  document.getElementById('modalTime').textContent=isNaN(kickoff.getTime())?'':'开球时间：'+kickoff.toLocaleString('zh-CN');
-  document.getElementById('predResult').classList.remove('show');
-  document.getElementById('allResultsWrap').classList.remove('show');
+  var timeStr='';
+  if(!isNaN(kickoff.getTime())){
+    var bjK=new Date(kickoff.getTime()+8*3600000);
+    var ky=bjK.getUTCFullYear(),km=bjK.getUTCMonth()+1,kd=bjK.getUTCDate();
+    var kh=String(bjK.getUTCHours()).padStart(2,'0'),kmin=String(bjK.getUTCMinutes()).padStart(2,'0');
+    timeStr='开球时间：'+ky+'年'+km+'月'+kd+'日  '+kh+':'+kmin+' (北京时间)';
+  }
+  document.getElementById('modalTime').textContent=timeStr;
   document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function openPrediction(m) {
+  openModalBase(m);
+  document.getElementById('reviewSection').style.display='none';
+  document.getElementById('predSection').style.display='block';
+  document.getElementById('predResult').classList.remove('show');
+  document.getElementById('predLoading').style.display='none';
+  document.getElementById('predMainResult').style.display='block';
+  document.getElementById('summonBtn').disabled=false;
+  document.getElementById('summonBtn').textContent='召唤神谕 🔮';
+  selectedModel='luopan';
+  document.querySelectorAll('.model-btn').forEach(function(b){b.classList.remove('active');});
+  var firstBtn=document.querySelector('.model-btn[data-model="luopan"]');
+  if(firstBtn) firstBtn.classList.add('active');
+}
+
+function openReview(m) {
+  openModalBase(m);
+  document.getElementById('predSection').style.display='none';
+  document.getElementById('reviewSection').style.display='block';
+  var home=cnName((m.homeTeam&&m.homeTeam.name)||'主队');
+  var away=cnName((m.awayTeam&&m.awayTeam.name)||'客队');
+  var hasScore=m.homeScore!==null&&m.awayScore!==null;
+  if(hasScore){
+    var scoreEl=document.getElementById('reviewScore');
+    var resultText='';
+    if(m.homeScore>m.awayScore){
+      scoreEl.style.color='var(--cyan)';
+      resultText=home+' 获胜';
+    } else if(m.awayScore>m.homeScore){
+      scoreEl.style.color='var(--pink)';
+      resultText=away+' 获胜';
+    } else {
+      scoreEl.style.color='var(--gold)';
+      resultText='平局';
+    }
+    scoreEl.textContent=m.homeScore+' - '+m.awayScore;
+    document.getElementById('reviewResult').textContent='最终比分 · '+resultText;
+  } else {
+    document.getElementById('reviewScore').textContent='—';
+    document.getElementById('reviewScore').style.color='var(--muted)';
+    document.getElementById('reviewResult').textContent='ESPN 暂未返回此场比赛比分';
+  }
 }
 
 function closeModal() { document.getElementById('modalBackdrop').classList.remove('open'); }
@@ -492,100 +1513,645 @@ function selectModel(el) {
   selectedModel=el.dataset.model;
 }
 
-function seedRandom(str) {
-  var h=0;
-  for (var i=0;i<str.length;i++){h=Math.imul(31,h)+str.charCodeAt(i)|0;}
-  return function(){h^=h<<13;h^=h>>17;h^=h<<5;return(h>>>0)/4294967296;};
-}
-
-function runModel(modelId,m) {
-  var home=(m.homeTeam&&(m.homeTeam.name||m.homeTeam.shortName))||'主队';
-  var away=(m.awayTeam&&(m.awayTeam.name||m.awayTeam.shortName))||'客队';
-  var seed=home+away+modelId+fmt(new Date(m.utcDate||Date.now()));
-  var rnd=seedRandom(seed);
-  var hBase=0.42+rnd()*0.06, dBase=0.28+rnd()*0.04, aBase=1-hBase-dBase;
-  var hProb,dProb,aProb,analysis,keyFactor;
-  if (modelId==='poisson') {
-    var hGoal=1.3+rnd()*0.8, aGoal=0.9+rnd()*0.7;
-    hProb=Math.min(0.78,hBase*(hGoal/aGoal)*(0.9+rnd()*0.2));
-    dProb=dBase; aProb=1-hProb-dProb;
-    analysis='基于泊松进球率：'+home+' 预计 '+hGoal.toFixed(1)+' 球，'+away+' 预计 '+aGoal.toFixed(1)+' 球';
-    keyFactor='主场进球率优势 '+((hGoal/aGoal-1)*100).toFixed(0)+'%';
-  } else if (modelId==='elo') {
-    var eloDiff=(rnd()-0.4)*200, eloAdj=eloDiff/600;
-    hProb=Math.max(0.1,Math.min(0.85,hBase+eloAdj));
-    dProb=dBase*(1-Math.abs(eloAdj)); aProb=1-hProb-dProb;
-    analysis='ELO 差值约 '+Math.abs(eloDiff).toFixed(0)+' 点，'+(eloDiff>0?home:away)+' 实力占优';
-    keyFactor='ELO 差值 '+eloDiff.toFixed(0)+' pts';
-  } else if (modelId==='form') {
-    var formAdv=(rnd()-0.45)*0.15;
-    hProb=Math.max(0.1,Math.min(0.85,hBase+formAdv));
-    dProb=dBase; aProb=1-hProb-dProb;
-    var fw=Math.floor(rnd()*4);
-    analysis='近期状态：'+home+' '+fw+'胜'+(1+Math.floor(rnd()*2))+'平，整体'+(formAdv>0?'占优':'稍弱');
-    keyFactor=(formAdv>0?home:away)+' 近期上升趋势';
-  } else {
-    hProb=hBase; dProb=dBase; aProb=aBase;
-    analysis='综合三模型等权平均，均衡各因素';
-    keyFactor='三模型综合共识';
+// =====================================================
+// 工具函数
+// =====================================================
+function buildProbBars(home, away, h, d, a) {
+  function bar(label, pct, color) {
+    return '<div class="prob-bar-wrap"><div class="prob-label"><span>' + label + '</span><span>' + (pct * 100).toFixed(1) + '%</span></div><div class="prob-bar"><div class="prob-fill" style="width:' + (pct * 100).toFixed(1) + '%;background:' + color + '"></div></div></div>';
   }
-  var total=hProb+dProb+aProb;
-  hProb/=total; dProb/=total; aProb/=total;
-  var winner=hProb>=aProb?(hProb>dProb+0.05?home+'获胜':'平局可能性高'):(aProb>dProb+0.05?away+'获胜':'平局可能性高');
-  return {hProb,dProb,aProb,winner,analysis,keyFactor,home,away};
+  return bar(home, h, 'var(--cyan)') + bar('平局', d, 'rgba(255,215,0,0.7)') + bar(away, a, 'var(--pink)');
 }
 
-var MODELS=[{id:'poisson',name:'📊 泊松模型'},{id:'elo',name:'🏆 ELO评级'},{id:'form',name:'🔥 状态分析'}];
-
-function buildProbBars(home,away,h,d,a) {
-  function bar(label,pct,color){
-    return '<div class="prob-bar-wrap"><div class="prob-label"><span>'+label+'</span><span>'+(pct*100).toFixed(0)+'%</span></div><div class="prob-bar"><div class="prob-fill" style="width:'+(pct*100).toFixed(1)+'%;background:'+color+'"></div></div></div>';
-  }
-  return bar(home,h,'var(--cyan)')+bar('平局',d,'rgba(255,215,0,0.7)')+bar(away,a,'var(--pink)');
+// 泊松分布：P(X=k) = e^(-λ) * λ^k / k!
+function poissonProb(lambda, k) {
+  var p = Math.exp(-lambda);
+  for (var i = 1; i <= k; i++) p *= lambda / i;
+  return p;
 }
 
-function runPrediction() {
-  if (!currentMatch) return;
-  var btn=document.getElementById('summonBtn');
-  btn.disabled=true; btn.textContent='神谕推演中...';
-  setTimeout(function(){
-    var result=document.getElementById('predResult');
-    var allWrap=document.getElementById('allResultsWrap');
-    result.classList.remove('show'); allWrap.classList.remove('show');
-    if (selectedModel==='all') {
-      var results=MODELS.map(function(mod){return Object.assign({modelName:mod.name},runModel(mod.id,currentMatch));});
-      var avgH=results.reduce(function(s,r){return s+r.hProb;},0)/results.length;
-      var avgD=results.reduce(function(s,r){return s+r.dProb;},0)/results.length;
-      var avgA=results.reduce(function(s,r){return s+r.aProb;},0)/results.length;
-      var home=results[0].home, away=results[0].away;
-      document.getElementById('resModelName').textContent='✨ 全模型综合预测';
-      var topPick=avgH>=avgA?(avgH>avgD+0.05?home+' 获胜':'平局'):(avgA>avgD+0.05?away+' 获胜':'平局');
-      document.getElementById('resWinner').textContent='预测结果：'+topPick;
-      document.getElementById('resProbs').innerHTML=buildProbBars(home,away,avgH,avgD,avgA);
-      document.getElementById('resAnalysis').textContent='三模型加权综合，涵盖进球率、ELO实力、近期状态';
-      document.getElementById('resKeyFactor').textContent='主'+( avgH*100).toFixed(0)+'% / 平'+(avgD*100).toFixed(0)+'% / 客'+(avgA*100).toFixed(0)+'%';
-      var rows=document.getElementById('allResultsRows');
-      rows.innerHTML='';
-      results.forEach(function(r){
-        var row=document.createElement('div'); row.className='result-row';
-        var pick=r.hProb>=r.aProb?(r.hProb>r.dProb+0.05?r.home+'获胜':'平局'):(r.aProb>r.dProb+0.05?r.away+'获胜':'平局');
-        row.innerHTML='<span class="result-row-model">'+r.modelName+'</span><span class="result-row-pick">'+pick+' ('+(Math.max(r.hProb,r.aProb,r.dProb)*100).toFixed(0)+'%)</span>';
-        rows.appendChild(row);
-      });
-      document.getElementById('consensusText').textContent='三模型一致性：高度综合';
-      allWrap.classList.add('show');
-    } else {
-      var r=runModel(selectedModel,currentMatch);
-      var mod=MODELS.find(function(x){return x.id===selectedModel;});
-      document.getElementById('resModelName').textContent=mod?mod.name:'';
-      document.getElementById('resWinner').textContent='预测结果：'+r.winner;
-      document.getElementById('resProbs').innerHTML=buildProbBars(r.home,r.away,r.hProb,r.dProb,r.aProb);
-      document.getElementById('resAnalysis').textContent=r.analysis;
-      document.getElementById('resKeyFactor').textContent=r.keyFactor;
+// 用泊松分布矩阵计算主/平/客概率 + 最可能比分
+function poissonMatrix(hLambda, aLambda, maxGoal) {
+  maxGoal = maxGoal || 8;
+  var hWin = 0, draw = 0, aWin = 0;
+  var bestProb = 0, bestScore = [0, 0];
+  for (var i = 0; i <= maxGoal; i++) {
+    for (var j = 0; j <= maxGoal; j++) {
+      var p = poissonProb(hLambda, i) * poissonProb(aLambda, j);
+      if (i > j) hWin += p;
+      else if (i === j) draw += p;
+      else aWin += p;
+      if (p > bestProb) { bestProb = p; bestScore = [i, j]; }
     }
-    result.classList.add('show');
-    btn.disabled=false; btn.textContent='重新预测 🔮';
-  },900);
+  }
+  return { hWin: hWin, draw: draw, aWin: aWin, bestScore: bestScore };
+}
+
+// 基于种子的伪随机数生成器（mulberry32算法），保证同场比赛结果稳定
+function seededRng(seed) {
+  var s = seed >>> 0;
+  return function() {
+    s += 0x6D2B79F5;
+    var t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// 从比赛ID生成数字种子
+function matchSeed(matchId) {
+  var s = 0;
+  var str = String(matchId || '0');
+  for (var i = 0; i < str.length; i++) {
+    s = (Math.imul(31, s) + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(s);
+}
+
+// 蒙特卡洛模拟（用于天机神算），seed固定则结果稳定
+function monteCarlo(hLambda, aLambda, n, seed) {
+  n = n || 10000;
+  var rng = seededRng(seed !== undefined ? seed : 42);
+  var hWin = 0, draw = 0, aWin = 0;
+  var scoreMap = {};
+  for (var i = 0; i < n; i++) {
+    var hG = poissonRandom(hLambda, rng), aG = poissonRandom(aLambda, rng);
+    var key = hG + '-' + aG;
+    scoreMap[key] = (scoreMap[key] || 0) + 1;
+    if (hG > aG) hWin++;
+    else if (hG === aG) draw++;
+    else aWin++;
+  }
+  // 找最高频比分
+  var bestKey = Object.keys(scoreMap).reduce(function(a, b) { return scoreMap[a] > scoreMap[b] ? a : b; });
+  var parts = bestKey.split('-');
+  return {
+    hWin: hWin / n, draw: draw / n, aWin: aWin / n,
+    bestScore: [parseInt(parts[0]), parseInt(parts[1])],
+    scoreMap: scoreMap, n: n
+  };
+}
+
+function poissonRandom(lambda, rng) {
+  var rand = rng || Math.random;
+  var L = Math.exp(-lambda), k = 0, p = 1;
+  do { k++; p *= (typeof rand === 'function' ? rand() : Math.random()); } while (p > L);
+  return k - 1;
+}
+
+// =====================================================
+// ESPN API 数据获取（真实数据）
+// =====================================================
+
+// 获取比赛 summary（近期战绩、对阵历史、球员信息等）
+async function fetchMatchSummary(matchId) {
+  var cacheKey = 'sum_' + matchId;
+  try {
+    var cached = sessionStorage.getItem(cacheKey);
+    if (cached) return JSON.parse(cached);
+  } catch(e) {}
+  try {
+    var url = 'https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=' + matchId;
+    var res = await fetch(url);
+    if (!res.ok) return null;
+    var data = await res.json();
+    try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch(e) {}
+    return data;
+  } catch(e) { return null; }
+}
+
+// 从 summary 提取球队数据
+function extractTeamStats(summary, homeId) {
+  // boxscore competitors
+  var competitors = (summary.boxscore && summary.boxscore.teams) || [];
+  var homeStats = null, awayStats = null;
+  competitors.forEach(function(t) {
+    var isHome = t.homeAway === 'home';
+    var stats = {};
+    (t.statistics || []).forEach(function(s) { stats[s.name] = s.displayValue; });
+    if (isHome) homeStats = stats; else awayStats = stats;
+  });
+  return { homeStats: homeStats || {}, awayStats: awayStats || {} };
+}
+
+// 从 summary header 提取近期战绩（lastFiveGames）
+function extractRecentForm(summary) {
+  var result = { home: [], away: [] };
+  try {
+    var comps = summary.header && summary.header.competitions && summary.header.competitions[0];
+    if (!comps) return result;
+    comps.competitors.forEach(function(c) {
+      var form = [];
+      (c.form || '').split('').forEach(function(ch) { form.push(ch.toUpperCase()); });
+      if (c.homeAway === 'home') result.home = form;
+      else result.away = form;
+    });
+  } catch(e) {}
+  return result;
+}
+
+// 从 season series（H2H）提取历史对阵
+function extractH2H(summary) {
+  var result = { homeWins: 0, draws: 0, awayWins: 0, total: 0 };
+  try {
+    var series = summary.seasonseries || summary.seasonSeries || [];
+    series.forEach(function(s) {
+      (s.events || []).forEach(function(ev) {
+        var comps = (ev.competitions && ev.competitions[0] && ev.competitions[0].competitors) || [];
+        var home = comps.find(function(c) { return c.homeAway === 'home'; });
+        var away = comps.find(function(c) { return c.homeAway === 'away'; });
+        if (home && away && home.score !== undefined && away.score !== undefined) {
+          result.total++;
+          var hs = parseInt(home.score), as = parseInt(away.score);
+          if (hs > as) result.homeWins++;
+          else if (hs === as) result.draws++;
+          else result.awayWins++;
+        }
+      });
+    });
+  } catch(e) {}
+  return result;
+}
+
+// 从 summary 提取伤停信息（缺少主力球员数量）
+function extractInjuries(summary) {
+  var result = { homeOut: 0, awayOut: 0, homeKey: [], awayKey: [] };
+  try {
+    var injuries = summary.injuries || [];
+    injuries.forEach(function(team) {
+      var side = (team.team && team.team.homeAway) || '';
+      var count = (team.injuries || []).filter(function(p) {
+        var s = (p.status || '').toLowerCase();
+        return s === 'out' || s === 'doubtful';
+      }).length;
+      if (side === 'home') result.homeOut = count;
+      else result.awayOut = count;
+    });
+  } catch(e) {}
+  return result;
+}
+
+// 从 standings API 获取积分榜数据（真实积分/进球/失球）
+async function fetchStandings(leagueCode) {
+  if (!leagueCode || leagueCode === 'INT') return null;
+  // 从leagueCode提取espn slug
+  var slug = LEAGUE_ESPN_SLUG[leagueCode];
+  if (!slug) return null;
+  var cacheKey = 'std_' + slug;
+  try {
+    var cached = sessionStorage.getItem(cacheKey);
+    if (cached) { var obj = JSON.parse(cached); if (Date.now() - obj.ts < 30 * 60000) return obj.data; }
+  } catch(e) {}
+  try {
+    var url = 'https://site.api.espn.com/apis/v2/sports/soccer/' + slug + '/standings';
+    var res = await fetch(url);
+    if (!res.ok) return null;
+    var data = await res.json();
+    try { sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: data })); } catch(e) {}
+    return data;
+  } catch(e) { return null; }
+}
+
+// 从积分榜数据中查找球队统计
+function findTeamInStandings(standingsData, teamName) {
+  if (!standingsData) return null;
+  var entries = [];
+  try {
+    var groups = (standingsData.standings && standingsData.standings.entries) ||
+                 (standingsData.children && standingsData.children[0] && standingsData.children[0].standings && standingsData.children[0].standings.entries) || [];
+    entries = groups;
+  } catch(e) {}
+  var found = null;
+  entries.forEach(function(e) {
+    var name = (e.team && e.team.displayName) || '';
+    if (name === teamName || cnName(name) === cnName(teamName)) {
+      found = e;
+    }
+  });
+  if (!found) return null;
+  var stats = {};
+  (found.stats || []).forEach(function(s) { stats[s.name || s.abbreviation] = s.value !== undefined ? s.value : parseFloat(s.displayValue) || 0; });
+  return stats;
+}
+
+// 天气API（Open-Meteo，免费无需key）
+var CITY_COORDS = {
+  // 英格兰
+  'Manchester': [53.4808, -2.2426], 'London': [51.5074, -0.1278], 'Liverpool': [53.4084, -2.9916],
+  'Birmingham': [52.4862, -1.8904], 'Leeds': [53.8008, -1.5491], 'Newcastle': [54.9783, -1.6178],
+  'Sheffield': [53.3811, -1.4701], 'Southampton': [50.9097, -1.4044], 'Brighton': [50.8225, -0.1372],
+  'Nottingham': [52.9548, -1.1581], 'Wolverhampton': [52.5862, -2.1289], 'Brentford': [51.4882, -0.3088],
+  // 西班牙
+  'Madrid': [40.4168, -3.7038], 'Barcelona': [41.3851, 2.1734], 'Seville': [37.3891, -5.9845],
+  'Valencia': [39.4699, -0.3763], 'Bilbao': [43.2630, -2.9350], 'Atletico': [40.4360, -3.5995],
+  // 德国
+  'Munich': [48.1351, 11.5820], 'Berlin': [52.5200, 13.4050], 'Dortmund': [51.5136, 7.4653],
+  'Hamburg': [53.5753, 10.0153], 'Frankfurt': [50.1109, 8.6821], 'Leverkusen': [51.0459, 7.0020],
+  // 意大利
+  'Rome': [41.9028, 12.4964], 'Milan': [45.4654, 9.1859], 'Turin': [45.0703, 7.6869],
+  'Naples': [40.8518, 14.2681], 'Florence': [43.7696, 11.2558],
+  // 法国
+  'Paris': [48.8566, 2.3522], 'Lyon': [45.7640, 4.8357], 'Marseille': [43.2965, 5.3698],
+  // 荷兰
+  'Amsterdam': [52.3676, 4.9041], 'Rotterdam': [51.9244, 4.4777],
+  // 葡萄牙
+  'Lisbon': [38.7223, -9.1393], 'Porto': [41.1579, -8.6291],
+  // 中国
+  'Beijing': [39.9042, 116.4074], 'Shanghai': [31.2304, 121.4737],
+  'Guangzhou': [23.1291, 113.2644], 'Wuhan': [30.5928, 114.3055],
+  // 默认
+  'default': [51.5074, -0.1278]
+};
+
+function getCityCoords(teamName) {
+  var name = teamName || '';
+  for (var city in CITY_COORDS) {
+    if (name.toLowerCase().indexOf(city.toLowerCase()) >= 0) return CITY_COORDS[city];
+  }
+  // 尝试中文球队对应城市
+  if (name.indexOf('北京') >= 0) return CITY_COORDS['Beijing'];
+  if (name.indexOf('上海') >= 0) return CITY_COORDS['Shanghai'];
+  if (name.indexOf('广州') >= 0) return CITY_COORDS['Guangzhou'];
+  if (name.indexOf('武汉') >= 0) return CITY_COORDS['Wuhan'];
+  if (name.indexOf('曼') >= 0 || name.indexOf('Man') >= 0) return CITY_COORDS['Manchester'];
+  if (name.indexOf('皇马') >= 0 || name.indexOf('Real Madrid') >= 0) return CITY_COORDS['Madrid'];
+  if (name.indexOf('巴萨') >= 0 || name.indexOf('Barcelona') >= 0) return CITY_COORDS['Barcelona'];
+  if (name.indexOf('拜仁') >= 0 || name.indexOf('Bayern') >= 0) return CITY_COORDS['Munich'];
+  if (name.indexOf('巴黎') >= 0 || name.indexOf('Paris') >= 0) return CITY_COORDS['Paris'];
+  return CITY_COORDS['default'];
+}
+
+async function fetchWeather(lat, lon, dateStr) {
+  // dateStr: YYYY-MM-DD
+  try {
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+              '&daily=precipitation_sum,windspeed_10m_max,temperature_2m_max,temperature_2m_min' +
+              '&start_date=' + dateStr + '&end_date=' + dateStr + '&timezone=auto';
+    var res = await fetch(url);
+    if (!res.ok) return null;
+    var data = await res.json();
+    var daily = data.daily;
+    if (!daily) return null;
+    return {
+      rain: (daily.precipitation_sum && daily.precipitation_sum[0]) || 0,
+      wind: (daily.windspeed_10m_max && daily.windspeed_10m_max[0]) || 0,
+      tempMax: (daily.temperature_2m_max && daily.temperature_2m_max[0]) || 20,
+      tempMin: (daily.temperature_2m_min && daily.temperature_2m_min[0]) || 10
+    };
+  } catch(e) { return null; }
+}
+
+// ESPN slug 映射（用于积分榜查询）
+var LEAGUE_ESPN_SLUG = {
+  'l:23': 'eng.1',   // 英超
+  'l:24': 'esp.1',   // 西甲
+  'l:19': 'ger.1',   // 德甲
+  'l:17': 'ita.1',   // 意甲
+  'l:22': 'fra.1',   // 法甲
+  'l:10': 'uefa.champions',
+  'l:18': 'ned.1',   // 荷甲
+  'l:25': 'por.1',   // 葡超
+  'l:20': 'eng.2',   // 英冠
+  'l:32': 'chn.1',   // 中超
+};
+
+// 形态分值：W=3, D=1, L=0，加权最近
+function formScore(formArr) {
+  var weights = [0.30, 0.25, 0.20, 0.15, 0.10];
+  var score = 0, total = 0;
+  formArr.slice(0, 5).forEach(function(r, i) {
+    var w = weights[i] || 0.10;
+    if (r === 'W') score += 3 * w;
+    else if (r === 'D') score += 1 * w;
+    total += 3 * w;
+  });
+  return total > 0 ? score / total : 0.5;
+}
+
+// =====================================================
+// 模型一：星象罗盘（基础 · 积分榜 + 泊松）
+// =====================================================
+async function modelLuoPan(m, summary, standings) {
+  var home = cnName((m.homeTeam && m.homeTeam.name) || '主队');
+  var away = cnName((m.awayTeam && m.awayTeam.name) || '客队');
+  var factors = [];
+
+  // 从积分榜获取真实数据
+  var homeStd = standings ? findTeamInStandings(standings, m.homeTeam && m.homeTeam.name) : null;
+  var awayStd = standings ? findTeamInStandings(standings, m.awayTeam && m.awayTeam.name) : null;
+
+  var hGoalFor = 1.5, hGoalAgainst = 1.2, aGoalFor = 1.2, aGoalAgainst = 1.5;
+  var hPlayed = 1, aPlayed = 1;
+
+  if (homeStd) {
+    hPlayed = homeStd['gamesPlayed'] || homeStd['GP'] || 1;
+    hGoalFor = (homeStd['pointsFor'] || homeStd['GF'] || homeStd['goalsFor'] || hGoalFor * hPlayed) / hPlayed;
+    hGoalAgainst = (homeStd['pointsAgainst'] || homeStd['GA'] || homeStd['goalsAgainst'] || hGoalAgainst * hPlayed) / hPlayed;
+    factors.push(home + ' 积分榜场均进球 ' + hGoalFor.toFixed(2));
+  }
+  if (awayStd) {
+    aPlayed = awayStd['gamesPlayed'] || awayStd['GP'] || 1;
+    aGoalFor = (awayStd['pointsFor'] || awayStd['GF'] || awayStd['goalsFor'] || aGoalFor * aPlayed) / aPlayed;
+    aGoalAgainst = (awayStd['pointsAgainst'] || awayStd['GA'] || awayStd['goalsAgainst'] || aGoalAgainst * aPlayed) / aPlayed;
+    factors.push(away + ' 积分榜场均进球 ' + aGoalFor.toFixed(2));
+  }
+
+  // 泊松期望进球数：基于双方进攻/防守均值
+  var leagueAvg = 1.35;
+  var hLambda = Math.max(0.3, (hGoalFor * aGoalAgainst) / leagueAvg);
+  var aLambda = Math.max(0.3, (aGoalFor * hGoalAgainst) / leagueAvg);
+
+  // 主场优势加成（历史上主场平均多0.3个球）
+  hLambda *= 1.12;
+  factors.push('主场优势加成 +12%');
+
+  var matrix = poissonMatrix(hLambda, aLambda, 8);
+  var total = matrix.hWin + matrix.draw + matrix.aWin;
+  var hProb = matrix.hWin / total, dProb = matrix.draw / total, aProb = matrix.aWin / total;
+
+  return {
+    hProb: hProb, dProb: dProb, aProb: aProb,
+    hLambda: hLambda, aLambda: aLambda,
+    bestScore: matrix.bestScore,
+    home: home, away: away,
+    analysis: '基于积分榜真实进球数据，泊松分布精算。' + home + ' 期望进球 ' + hLambda.toFixed(2) + '，' + away + ' 期望进球 ' + aLambda.toFixed(2),
+    keyFactor: '泊松期望比分 ' + matrix.bestScore[0] + ':' + matrix.bestScore[1],
+    factors: factors
+  };
+}
+
+// =====================================================
+// 模型二：战神推演（中级 · 近战 + H2H + 伤停）
+// =====================================================
+async function modelZhanShen(m, summary, standings) {
+  var home = cnName((m.homeTeam && m.homeTeam.name) || '主队');
+  var away = cnName((m.awayTeam && m.awayTeam.name) || '客队');
+  var factors = [];
+
+  // 基础：积分榜 lambda
+  var homeStd = standings ? findTeamInStandings(standings, m.homeTeam && m.homeTeam.name) : null;
+  var awayStd = standings ? findTeamInStandings(standings, m.awayTeam && m.awayTeam.name) : null;
+  var hGoalFor = 1.5, hGoalAgainst = 1.2, aGoalFor = 1.2, aGoalAgainst = 1.5;
+  if (homeStd) {
+    var hP = homeStd['gamesPlayed'] || homeStd['GP'] || 1;
+    hGoalFor = (homeStd['pointsFor'] || homeStd['GF'] || homeStd['goalsFor'] || hGoalFor * hP) / hP;
+    hGoalAgainst = (homeStd['pointsAgainst'] || homeStd['GA'] || homeStd['goalsAgainst'] || hGoalAgainst * hP) / hP;
+  }
+  if (awayStd) {
+    var aP = awayStd['gamesPlayed'] || awayStd['GP'] || 1;
+    aGoalFor = (awayStd['pointsFor'] || awayStd['GF'] || awayStd['goalsFor'] || aGoalFor * aP) / aP;
+    aGoalAgainst = (awayStd['pointsAgainst'] || awayStd['GA'] || awayStd['goalsAgainst'] || aGoalAgainst * aP) / aP;
+  }
+  var leagueAvg = 1.35;
+  var hLambda = Math.max(0.3, (hGoalFor * aGoalAgainst) / leagueAvg) * 1.12;
+  var aLambda = Math.max(0.3, (aGoalFor * hGoalAgainst) / leagueAvg);
+
+  // 近期战绩修正
+  var form = extractRecentForm(summary);
+  var hForm = form.home.length > 0 ? formScore(form.home) : 0.5;
+  var aForm = form.away.length > 0 ? formScore(form.away) : 0.5;
+  var hFormMod = 0.75 + hForm * 0.5; // 0.75~1.25
+  var aFormMod = 0.75 + aForm * 0.5;
+  hLambda *= hFormMod;
+  aLambda *= aFormMod;
+  if (form.home.length > 0) {
+    factors.push(home + ' 近' + form.home.length + '场：' + form.home.join('') + ' (状态系数' + hFormMod.toFixed(2) + ')');
+  }
+  if (form.away.length > 0) {
+    factors.push(away + ' 近' + form.away.length + '场：' + form.away.join('') + ' (状态系数' + aFormMod.toFixed(2) + ')');
+  }
+
+  // H2H历史对阵
+  var h2h = extractH2H(summary);
+  if (h2h.total > 0) {
+    var hH2H = h2h.homeWins / h2h.total;
+    var aH2H = h2h.awayWins / h2h.total;
+    hLambda *= (0.85 + hH2H * 0.3);
+    aLambda *= (0.85 + aH2H * 0.3);
+    factors.push('H2H历史' + h2h.total + '场：主' + h2h.homeWins + '胜 / 平' + h2h.draws + ' / 客' + h2h.awayWins + '胜');
+  }
+
+  // 伤停修正
+  var injuries = extractInjuries(summary);
+  if (injuries.homeOut > 0) {
+    var hInj = Math.max(0.7, 1 - injuries.homeOut * 0.04);
+    hLambda *= hInj;
+    factors.push(home + ' ' + injuries.homeOut + '人缺阵，进攻力-' + ((1 - hInj) * 100).toFixed(0) + '%');
+  }
+  if (injuries.awayOut > 0) {
+    var aInj = Math.max(0.7, 1 - injuries.awayOut * 0.04);
+    aLambda *= aInj;
+    factors.push(away + ' ' + injuries.awayOut + '人缺阵，进攻力-' + ((1 - aInj) * 100).toFixed(0) + '%');
+  }
+
+  var matrix = poissonMatrix(hLambda, aLambda, 8);
+  var total = matrix.hWin + matrix.draw + matrix.aWin;
+  var hProb = matrix.hWin / total, dProb = matrix.draw / total, aProb = matrix.aWin / total;
+
+  return {
+    hProb: hProb, dProb: dProb, aProb: aProb,
+    hLambda: hLambda, aLambda: aLambda,
+    bestScore: matrix.bestScore,
+    home: home, away: away,
+    analysis: '综合积分榜数据、近期战绩（加权）、H2H历史对阵及伤停信息，泊松矩阵精算。',
+    keyFactor: '近状修正后期望比分 ' + matrix.bestScore[0] + ':' + matrix.bestScore[1],
+    factors: factors
+  };
+}
+
+// =====================================================
+// 模型三：天机神算（神级 · 全因子 + 天气 + 蒙特卡洛）
+// =====================================================
+async function modelTianJi(m, summary, standings, weather) {
+  var home = cnName((m.homeTeam && m.homeTeam.name) || '主队');
+  var away = cnName((m.awayTeam && m.awayTeam.name) || '客队');
+  var factors = [];
+
+  // 基础积分榜
+  var homeStd = standings ? findTeamInStandings(standings, m.homeTeam && m.homeTeam.name) : null;
+  var awayStd = standings ? findTeamInStandings(standings, m.awayTeam && m.awayTeam.name) : null;
+  var hGoalFor = 1.5, hGoalAgainst = 1.2, aGoalFor = 1.2, aGoalAgainst = 1.5;
+  if (homeStd) {
+    var hP = homeStd['gamesPlayed'] || homeStd['GP'] || 1;
+    hGoalFor = (homeStd['pointsFor'] || homeStd['GF'] || homeStd['goalsFor'] || hGoalFor * hP) / hP;
+    hGoalAgainst = (homeStd['pointsAgainst'] || homeStd['GA'] || homeStd['goalsAgainst'] || hGoalAgainst * hP) / hP;
+  }
+  if (awayStd) {
+    var aP = awayStd['gamesPlayed'] || awayStd['GP'] || 1;
+    aGoalFor = (awayStd['pointsFor'] || awayStd['GF'] || awayStd['goalsFor'] || aGoalFor * aP) / aP;
+    aGoalAgainst = (awayStd['pointsAgainst'] || awayStd['GA'] || awayStd['goalsAgainst'] || aGoalAgainst * aP) / aP;
+  }
+  var leagueAvg = 1.35;
+  var hLambda = Math.max(0.3, (hGoalFor * aGoalAgainst) / leagueAvg) * 1.12;
+  var aLambda = Math.max(0.3, (aGoalFor * hGoalAgainst) / leagueAvg);
+
+  // 近期战绩修正
+  var form = extractRecentForm(summary);
+  var hForm = form.home.length > 0 ? formScore(form.home) : 0.5;
+  var aForm = form.away.length > 0 ? formScore(form.away) : 0.5;
+  hLambda *= (0.75 + hForm * 0.5);
+  aLambda *= (0.75 + aForm * 0.5);
+  if (form.home.length > 0) factors.push(home + ' 近' + form.home.length + '场：' + form.home.join(''));
+  if (form.away.length > 0) factors.push(away + ' 近' + form.away.length + '场：' + form.away.join(''));
+
+  // H2H
+  var h2h = extractH2H(summary);
+  if (h2h.total > 0) {
+    hLambda *= (0.85 + (h2h.homeWins / h2h.total) * 0.3);
+    aLambda *= (0.85 + (h2h.awayWins / h2h.total) * 0.3);
+    factors.push('H2H ' + h2h.total + '场记录：主' + h2h.homeWins + '/ 平' + h2h.draws + '/ 客' + h2h.awayWins);
+  }
+
+  // 伤停
+  var injuries = extractInjuries(summary);
+  if (injuries.homeOut > 0) { hLambda *= Math.max(0.7, 1 - injuries.homeOut * 0.04); factors.push(home + ' 缺阵' + injuries.homeOut + '人'); }
+  if (injuries.awayOut > 0) { aLambda *= Math.max(0.7, 1 - injuries.awayOut * 0.04); factors.push(away + ' 缺阵' + injuries.awayOut + '人'); }
+
+  // 天气修正
+  if (weather) {
+    var weatherMod = 1.0;
+    var weatherDesc = [];
+    if (weather.rain > 5) { weatherMod -= 0.08; weatherDesc.push('大雨(' + weather.rain.toFixed(1) + 'mm) 进球率-8%'); }
+    else if (weather.rain > 1) { weatherMod -= 0.03; weatherDesc.push('小雨(' + weather.rain.toFixed(1) + 'mm) 进球率-3%'); }
+    if (weather.wind > 50) { weatherMod -= 0.06; weatherDesc.push('强风(' + weather.wind.toFixed(0) + 'km/h) -6%'); }
+    else if (weather.wind > 30) { weatherMod -= 0.03; weatherDesc.push('有风(' + weather.wind.toFixed(0) + 'km/h) -3%'); }
+    if (weather.tempMax > 35) { weatherMod -= 0.05; weatherDesc.push('高温(' + weather.tempMax + '°C) 体能损耗-5%'); }
+    else if (weather.tempMin < 0) { weatherMod -= 0.04; weatherDesc.push('严寒(' + weather.tempMin + '°C) -4%'); }
+    hLambda *= Math.max(0.5, weatherMod);
+    aLambda *= Math.max(0.5, weatherMod);
+    if (weatherDesc.length > 0) factors.push('天气：' + weatherDesc.join('，'));
+    else factors.push('天气：适宜(' + weather.tempMin + '~' + weather.tempMax + '°C，风速' + weather.wind.toFixed(0) + 'km/h)');
+  }
+
+  // 比赛重要性修正（决赛/末轮 → 低进球，小组赛末轮 → 可能大胜）
+  var matchName = (m.leagueName || '').toLowerCase();
+  if (matchName.indexOf('champions') >= 0 || matchName.indexOf('欧冠') >= 0) {
+    hLambda *= 0.95; aLambda *= 0.95;
+    factors.push('欧冠淘汰赛 · 双方保守，进球率-5%');
+  }
+
+  // 蒙特卡洛模拟 10000 次（固定种子，同场比赛结果稳定）
+  hLambda = Math.max(0.2, hLambda);
+  aLambda = Math.max(0.2, aLambda);
+  var mc = monteCarlo(hLambda, aLambda, 10000, matchSeed(m.id || m.matchId || ''));
+
+  // 置信度（两支球队强弱差距 → 置信度高低）
+  var strongerProb = Math.max(mc.hWin, mc.aWin);
+  var confidence = strongerProb > 0.65 ? '高' : strongerProb > 0.50 ? '中' : '低';
+  factors.push('蒙特卡洛置信度：' + confidence + ' (' + (strongerProb * 100).toFixed(0) + '%)');
+
+  return {
+    hProb: mc.hWin, dProb: mc.draw, aProb: mc.aWin,
+    hLambda: hLambda, aLambda: aLambda,
+    bestScore: mc.bestScore,
+    home: home, away: away,
+    analysis: '全因子融合：积分榜 · 近期战绩 · H2H对阵 · 伤停 · 天气。蒙特卡洛10000次模拟，置信度：' + confidence + '。',
+    keyFactor: '模拟最可能比分 ' + mc.bestScore[0] + ':' + mc.bestScore[1] + ' · 置信度' + confidence,
+    factors: factors
+  };
+}
+
+// =====================================================
+// 预测主入口
+// =====================================================
+function showPredLoading(msg) {
+  document.getElementById('predLoading').style.display = 'block';
+  document.getElementById('predLoading').textContent = msg;
+  document.getElementById('predMainResult').style.display = 'none';
+}
+function hidePredLoading() {
+  document.getElementById('predLoading').style.display = 'none';
+  document.getElementById('predMainResult').style.display = 'block';
+}
+
+function renderPredResult(r, modelLabel) {
+  document.getElementById('resModelName').textContent = modelLabel;
+  var topProb = Math.max(r.hProb, r.dProb, r.aProb);
+  var winner = r.hProb >= r.aProb
+    ? (r.hProb > r.dProb + 0.04 ? r.home + ' 获胜' : '双方平局')
+    : (r.aProb > r.dProb + 0.04 ? r.away + ' 获胜' : '双方平局');
+  document.getElementById('resWinner').textContent = '▶ ' + winner + '（' + (topProb * 100).toFixed(1) + '%）';
+  document.getElementById('resScorePred').textContent = r.bestScore[0] + ' : ' + r.bestScore[1];
+  document.getElementById('resProbs').innerHTML = buildProbBars(r.home, r.away, r.hProb, r.dProb, r.aProb);
+  document.getElementById('resAnalysis').textContent = r.analysis;
+  document.getElementById('resKeyFactor').textContent = '🔑 ' + r.keyFactor;
+  var facEl = document.getElementById('resFactors');
+  facEl.innerHTML = '';
+  (r.factors || []).forEach(function(f) {
+    var chip = document.createElement('span');
+    chip.className = 'factor-chip';
+    chip.textContent = f;
+    facEl.appendChild(chip);
+  });
+  document.getElementById('predResult').classList.add('show');
+}
+
+async function runPrediction() {
+  if (!currentMatch) return;
+  var btn = document.getElementById('summonBtn');
+  btn.disabled = true; btn.textContent = '神谕推演中...';
+  document.getElementById('predResult').classList.add('show');
+  document.getElementById('predMainResult').style.display = 'none';
+
+  var modelLabels = {
+    luopan: '🧭 星象罗盘 · 积分榜泊松精算',
+    zhanshen: '⚔️ 战神推演 · 近战+H2H+伤停',
+    tianji: '🌌 天机神算 · 全因子蒙特卡洛'
+  };
+
+  showPredLoading('正在获取真实赛事数据...');
+
+  try {
+    // 并行获取：summary + standings + 天气
+    var matchId = currentMatch.id;
+    var leagueCode = currentMatch.leagueCode;
+    var kickoff = new Date(currentMatch.utcDate || Date.now());
+    var dateStr = fmt(kickoff);
+    var coords = getCityCoords((currentMatch.homeTeam && currentMatch.homeTeam.name) || '');
+
+    var tasks = [
+      fetchMatchSummary(matchId),
+      fetchStandings(leagueCode)
+    ];
+    // 天机神算额外获取天气
+    if (selectedModel === 'tianji') {
+      tasks.push(fetchWeather(coords[0], coords[1], dateStr));
+    }
+
+    showPredLoading(selectedModel === 'tianji' ? '正在分析战绩、对阵历史及比赛当地天气...' : '正在解析真实战绩数据...');
+    var results = await Promise.all(tasks);
+    var summary = results[0] || {};
+    var standings = results[1] || null;
+    var weather = results[2] || null;
+
+    var r;
+    if (selectedModel === 'luopan') {
+      showPredLoading('泊松矩阵精算中...');
+      r = await modelLuoPan(currentMatch, summary, standings);
+    } else if (selectedModel === 'zhanshen') {
+      showPredLoading('战神推演中，整合近战战绩与对阵历史...');
+      r = await modelZhanShen(currentMatch, summary, standings);
+    } else {
+      showPredLoading('天机神算：蒙特卡洛10000次模拟中...');
+      r = await modelTianJi(currentMatch, summary, standings, weather);
+    }
+
+    hidePredLoading();
+    renderPredResult(r, modelLabels[selectedModel] || selectedModel);
+  } catch(e) {
+    hidePredLoading();
+    document.getElementById('resModelName').textContent = '预测出错';
+    document.getElementById('resWinner').textContent = e.message || '数据获取失败，请重试';
+    document.getElementById('resScorePred').textContent = '';
+    document.getElementById('resProbs').innerHTML = '';
+    document.getElementById('resAnalysis').textContent = '';
+    document.getElementById('resKeyFactor').textContent = '';
+    document.getElementById('resFactors').innerHTML = '';
+    document.getElementById('predMainResult').style.display = 'block';
+    document.getElementById('predResult').classList.add('show');
+  }
+
+  btn.disabled = false; btn.textContent = '重新预测 🔮';
 }
 
 loadMatches();
